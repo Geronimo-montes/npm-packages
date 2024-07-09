@@ -3,12 +3,13 @@ import { CommonModule } from "@angular/common";
 import { DMNotifierComponent } from "./components/notifier/notifier.component";
 import { DMNotifierService } from "./services/notifier.service";
 import { BrowserModule } from "@angular/platform-browser";
-import { DMNotifierDirective } from "./directives/notifier.directive";
+import { DMOnCreateNotifierDirective } from "./directives/on-create-notifier.directive";
 import { DMNotifierContainerComponent } from "../../public-api";
+import { DMOnClickNotifierDirective } from "./directives/on-click-notifier.directive";
 
 const COMPONENTS: any[] = [DMNotifierComponent, DMNotifierContainerComponent];
 const SERVICES: any[] = [DMNotifierService];
-const DIRECTIVES: any[] = [DMNotifierDirective];
+const DIRECTIVES: any[] = [DMOnCreateNotifierDirective, DMOnClickNotifierDirective];
 
 @NgModule({
   declarations: [COMPONENTS, DIRECTIVES],

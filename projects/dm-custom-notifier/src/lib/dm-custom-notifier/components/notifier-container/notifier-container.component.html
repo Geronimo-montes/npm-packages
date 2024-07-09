@@ -4,6 +4,6 @@
   <dm-notifier
     *ngFor="let notifier of notifications"
     [notification]="notifier"
-    (onEvent)="closeNotification($event)"
+    [dmOnClickNotifier]="notifier"
   ></dm-notifier>
 </div>

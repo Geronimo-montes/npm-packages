@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { DMNotifierService } from "../../services/notifier.service";
-import { Observable, Subject, takeUntil } from "rxjs";
+import { Subject, takeUntil } from "rxjs";
 import { DMNotification } from "../../models/notification";
+import { DMNotifierService } from "../../services/notifier.service";
 
 @Component({
   selector: "dm-notifier-container",
@@ -25,9 +25,5 @@ export class DMNotifierContainerComponent implements OnInit, OnDestroy {
       .subscribe((notifications: DMNotification[]) => {
         this.notifications = notifications;
       });
-  }
-
-  closeNotification($event: any) {
-    this.notifierService.destroyNotifier($event);
   }
 }

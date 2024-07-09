@@ -3,12 +3,11 @@ import { DMNotifierService } from "../services/notifier.service";
 import { DMNotification } from "../models/notification";
 
 @Directive({
-  selector: "[dmNotifier]",
+  selector: "[dmOnCreateNotifier]",
 })
-export class DMNotifierDirective {
+export class DMOnCreateNotifierDirective {
   constructor(private notifierService: DMNotifierService) {}
-
-  @Input("dmNotifier") notifier?: DMNotification;
+  @Input("dmOnCreateNotifier") notifier?: DMNotification;
 
   @HostListener("click", ["$event"])
   onClick(evnet: MouseEvent) {
