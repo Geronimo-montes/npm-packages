@@ -7,4 +7,5 @@ export interface DMNotification {
   icon: string;
   message: string;
   accions: DMNotificationAction[];
+  duration: number;
 }
