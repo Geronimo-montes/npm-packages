@@ -1,11 +1,11 @@
-export type DMNotificationType = "error" | "warning" | "info" | "succes";
+export type DMNotificationType = "error" | "warning" | "info" | "success";
 export type DMNotificationAction = "Ok" | "Cancel";
 
 export interface DMNotification {
   title: string;
-  tpye: DMNotificationType;
+  type: DMNotificationType;
   icon: string;
   message: string;
-  accions: DMNotificationAction[];
+  actions: DMNotificationAction[];
   duration: number;
 }

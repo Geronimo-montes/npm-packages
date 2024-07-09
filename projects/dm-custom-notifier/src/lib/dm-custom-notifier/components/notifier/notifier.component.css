@@ -1,5 +1,91 @@
-div {
-  height: 10rem;
-  width: 25rem;
-  border: 2px black solid;
+/* Estilos base para las notificaciones */
+.notification {
+  display: flex;
+  align-items: flex-start; /* Alinear elementos al inicio */
+  padding: 15px;
+  margin-bottom: 15px; /* Espacio entre notificaciones */
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  background-color: #ffffff;
+  color: #333333;
+}
+
+.notification .icon {
+  font-size: 24px;
+  margin-right: 10px;
+  flex: 0 0 auto; /* Evita que el icono se estire */
+}
+
+.notification .content {
+  flex: 1; /* El contenido ocupa todo el espacio restante */
+}
+
+.notification .title {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.notification .message {
+  margin-bottom: 10px;
+}
+
+.notification .actions {
+  margin-top: 10px;
+}
+
+.notification .actions button {
+  margin-right: 10px;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+/* Estilos específicos para tipos de notificaciones */
+.notification.error {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+}
+
+.notification.warning {
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+  color: #856404;
+}
+
+.notification.info {
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+  color: #0c5460;
+}
+
+.notification.success {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
+}
+
+/* Media query para tabletas (768px a 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .notification {
+    flex-direction: column; /* Cambia a columna para tabletas */
+    align-items: stretch; /* Estira los elementos verticalmente */
+  }
+
+  .notification .icon {
+    margin-bottom: 10px; /* Añade espacio entre el icono y el contenido */
+  }
+}
+
+/* Media query para teléfonos (hasta 767px) */
+@media (max-width: 767px) {
+  .notification {
+    width: 100%; /* Ancho al 100% para ocupar toda la pantalla en teléfonos */
+    border-radius: 0; /* Quitar el borde redondeado */
+  }
+
+  .notification .icon {
+    margin-right: 0; /* Elimina el margen derecho del icono */
+    margin-bottom: 10px; /* Añade espacio entre el icono y el contenido */
+  }
 }

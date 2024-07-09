@@ -1,4 +1,23 @@
-<div (click)="onClose()">
-  <h1>{{ notification.title }}</h1>
-  <h2>{{ notification.message }}</h2>
+<!-- Ejemplo de HTML para una notificación -->
+<div class="notification" [ngClass]="notification.type">
+  <div class="icon">
+    <!-- Utilizamos el icono Unicode aquí -->
+    <span *ngIf="notification.type === 'error'">❌</span>
+    <span *ngIf="notification.type === 'warning'">⚠️</span>
+    <span *ngIf="notification.type === 'info'">ℹ️</span>
+    <span *ngIf="notification.type === 'success'">✅</span>
+  </div>
+  <div class="content">
+    <div class="title">{{ notification.title }}</div>
+    <div class="message">{{ notification.message }}</div>
+    <div class="actions">
+      <button
+        *ngFor="let action of notification.actions"
+        class="{{ action }}"
+        (click)="onClose()"
+      >
+        {{ action }}
+      </button>
+    </div>
+  </div>
 </div>
