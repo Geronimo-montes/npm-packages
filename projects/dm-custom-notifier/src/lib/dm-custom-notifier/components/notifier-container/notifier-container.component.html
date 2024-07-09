@@ -1,1 +1,9 @@
 <p>notifier-container works!</p>
+
+<div class="container-notifications">
+  <dm-notifier
+    *ngFor="let notifier of notifications"
+    [notification]="notifier"
+    (onEvent)="closeNotification($event)"
+  ></dm-notifier>
+</div>
