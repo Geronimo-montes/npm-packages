@@ -3,6 +3,7 @@
 This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.0.
 
 ## Commands init lib
+
 ```bash
 ng generate library dm-faker-pro
 && mkdir projects/dm-faker-pro/src/lib/dm-faker-pro/ \
@@ -20,13 +21,14 @@ ng generate library dm-faker-pro
 && ng generate component dm-faker-pro/components/DM-FakerProConfig --project=dm-faker-pro \
 && ng generate directive dm-faker-pro/directives/DMFakerPro --project=dm-faker-pro \
 && ng generate pipe dm-faker-pro/pipes/DMFakerPro --project=dm-faker-pro \
-&& ng generate service dm-faker-pro/services/DM-FakerProLocale --project=dm-faker-pro 
+&& ng generate service dm-faker-pro/services/DM-FakerProLocale --project=dm-faker-pro
 ```
 
 ## Code scaffolding
 
 Run `ng generate component component-name --project dm-faker-pro` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project dm-faker-pro`.
-> Note: Don't forget to add `--project dm-faker-pro` or else it will be added to the default project in your `angular.json` file. 
+
+> Note: Don't forget to add `--project dm-faker-pro` or else it will be added to the default project in your `angular.json` file.
 
 ## Build
 
