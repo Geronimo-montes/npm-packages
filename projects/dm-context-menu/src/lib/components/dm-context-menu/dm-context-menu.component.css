@@ -1,0 +1,15 @@
+/* Estilos generales para el menú contextual */
+.context-menu {
+  position: absolute;
+  z-index: 1000;
+  width: 12rem;
+  background-color: #333;
+  border: 1px solid #444;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  flex-direction: column;
+  padding: 8px 0;
+  font-family: "Arial", sans-serif;
+  color: #fff;
+  border-radius: 8px;
+  display: flex;
+}

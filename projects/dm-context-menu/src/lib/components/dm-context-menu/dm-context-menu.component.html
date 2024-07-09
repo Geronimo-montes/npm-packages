@@ -1,0 +1,22 @@
+<div
+  style="height: 100vh; width: 100vw"
+  dmContextMenu
+  (dmContextMenuOpen)="onShowContextMenu($event)"
+>
+  <div
+    dmContextMenuContent
+    [dmContextMenuContentShow]="showContextMenu"
+    id="context-menu"
+    class="context-menu"
+    *ngIf="showContextMenu"
+  >
+    <!-- Submenu normal -->
+    <dm-item-context-menu
+      *ngFor="let item of menu.items"
+      [title]="item.title"
+      [actions]="item.action"
+      [childs]="item.childs ? item.childs : []"
+      (onSelectAcction)="onEventAction($event)"
+    ></dm-item-context-menu>
+  </div>
+</div>
