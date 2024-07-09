@@ -1,11 +1,8 @@
-import { Directive } from '@angular/core';
+import { Directive } from "@angular/core";
 
 @Directive({
-  selector: '[libDMFakerPro]',
-  standalone: true
+  selector: "[libDMFakerPro]",
 })
 export class DMFakerProDirective {
-
-  constructor() { }
-
+  constructor() {}
 }
