@@ -28,7 +28,7 @@ export class DMNotifierService {
    * @param notifier The notification to add.
    */
   public createNotifier(notifier: DMNotification) {
-    this.notifications.push(notifier);
+    this.notifications.unshift(notifier);
     this.subjectNotifications.next(this.notifications);
 
     setTimeout(() => {

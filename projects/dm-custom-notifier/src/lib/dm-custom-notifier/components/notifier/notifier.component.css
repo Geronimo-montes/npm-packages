@@ -2,7 +2,8 @@
 .notification {
   display: flex;
   align-items: flex-start; /* Alinear elementos al inicio */
-  padding: 15px;
+  justify-content: center;
+  padding: 0.5rem;
   margin-bottom: 15px; /* Espacio entre notificaciones */
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -11,8 +12,10 @@
 }
 
 .notification .icon {
-  font-size: 24px;
-  margin-right: 10px;
+  font-size: 2.5rem;
+  margin: auto;
+  align-self: center;
+  justify-self: center;
   flex: 0 0 auto; /* Evita que el icono se estire */
 }
 

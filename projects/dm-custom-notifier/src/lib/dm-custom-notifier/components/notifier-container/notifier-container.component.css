@@ -7,7 +7,7 @@
   flex-direction: column-reverse; /* Alinear las notificaciones en columna, desde abajo hacia arriba */
   right: 1vw; /* Distancia desde el borde derecho de la ventana */
   z-index: 10000; /* Asegura que esté por encima de otros elementos */
-  width: 300px; /* Ancho fijo del contenedor por defecto */
+  width: 400px; /* Ancho fijo del contenedor por defecto */
   margin: 20px; /* Margen exterior */
   overflow-y: auto; /* Habilita el scroll vertical cuando se excede la altura máxima */
   padding: 10px; /* Añade un padding al contenido */
