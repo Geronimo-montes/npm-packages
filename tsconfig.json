@@ -13,6 +13,16 @@
       "dm-contextmenu": [
         "./dist/dm-contextmenu"
       ],
+      "dm-custom-notifier": [
+        "./dist/dm-custom-notifier",
+        "./dist/dm-custom-notifier",
+        "./dist/dm-custom-notifier",
+        "./dist/dm-custom-notifier",
+        "./dist/dm-custom-notifier",
+        "./dist/dm-custom-notifier",
+        "./dist/dm-custom-notifier",
+        "./dist/dm-custom-notifier"
+      ],
       "dm-faker-pro": [
         "./dist/dm-faker-pro"
       ]

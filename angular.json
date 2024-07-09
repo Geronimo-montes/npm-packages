@@ -138,6 +138,36 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "tsConfig": "projects/dm-faker-pro/tsconfig.spec.json",
+            "polyfills": ["zone.js", "zone.js/testing"]
+          }
+        }
+      }
+    },
+    "dm-custom-notifier": {
+      "projectType": "library",
+      "root": "projects/dm-custom-notifier",
+      "sourceRoot": "projects/dm-custom-notifier/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/dm-custom-notifier/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/dm-custom-notifier/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/dm-custom-notifier/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/dm-custom-notifier/tsconfig.spec.json",
             "polyfills": [
               "zone.js",
               "zone.js/testing"
