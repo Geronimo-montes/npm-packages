@@ -12,6 +12,9 @@
       ],
       "dm-contextmenu": [
         "./dist/dm-contextmenu"
+      ],
+      "dm-faker-pro": [
+        "./dist/dm-faker-pro"
       ]
 		},
 		"outDir": "./dist/out-tsc",
