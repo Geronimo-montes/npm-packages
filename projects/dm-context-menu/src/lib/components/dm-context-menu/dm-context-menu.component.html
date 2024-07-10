@@ -2,13 +2,10 @@
   <div
     dmContextMenuContent
     [dmContextMenuContentShow]="showContextMenu"
-    id="context-menu"
     class="context-menu"
     *ngIf="showContextMenu"
   >
-    <!-- Submenu normal -->
     <dm-item-context-menu
-      [dmHover]="item"
       *ngFor="let item of menu.items"
       [item]="item"
       (onSelectAcction)="onEventAction($event)"

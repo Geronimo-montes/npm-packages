@@ -1,4 +1,10 @@
-import { Directive, HostListener, Input } from "@angular/core";
+import {
+  Directive,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+} from "@angular/core";
 import { DMContextMenuService } from "../services/dm-context-menu.service";
 import { DMContextMenuItem } from "../models/context-menu";
 
@@ -8,18 +14,15 @@ import { DMContextMenuItem } from "../models/context-menu";
 export class HoverDirective {
   constructor(protected readonly contextMenuService: DMContextMenuService) {}
 
-  @Input("dmHover") item!: DMContextMenuItem;
+  @Output("dmHover") onToggleSubMenu = new EventEmitter<boolean>();
 
-  @HostListener("mouseover", ["$event"])
-  onHover(event: Event) {
-    event.preventDefault();
-    this.contextMenuService.showChilds(this.item);
+  @HostListener("mouseenter")
+  onMouseEnter() {
+    this.onToggleSubMenu.emit(true);
   }
 
-  @HostListener("mouseout", ["$event"])
-  onMouseOut(event: Event) {
-    console.log({ event });
-    event.preventDefault();
-    this.contextMenuService.reset(this.item);
+  @HostListener("mouseleave")
+  onMouseLeave() {
+    this.onToggleSubMenu.emit(false);
   }
 }

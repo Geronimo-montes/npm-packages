@@ -9,12 +9,12 @@
 }
 
 /* Efecto al pasar el ratón sobre un elemento del menú */
-/* .context-menu-item:hover {
+.context-menu-item:hover {
   background-color: #555;
-} */
+}
 
 .sub-menu {
-  /* display: none; */
+  display: none;
   position: absolute;
   top: -25%;
   left: 100%; /* Posiciona el submenú al costado derecho del menú principal */
@@ -28,8 +28,9 @@
   color: #fff;
   z-index: 1000;
   width: 12rem;
+  display: flex;
 }
 
-/* .context-menu-item:hover .sub-menu:first-child {
-  display: block;
-} */
+.sub-menu-show {
+  display: flex;
+}
