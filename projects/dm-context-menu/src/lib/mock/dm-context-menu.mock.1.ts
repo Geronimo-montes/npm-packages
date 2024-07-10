@@ -127,8 +127,8 @@ export const contextMenu: DMContextMenu = {
             onClick: (event: MouseEvent) =>
               console.log({ acction: "Reducir vista", event }),
           },
-          childs: [],
-          showChilds: false,
+              childs: [],
+              showChilds: false,
         },
         {
           title: "Restablecer Zoom",
@@ -136,61 +136,10 @@ export const contextMenu: DMContextMenu = {
             onClick: (event: MouseEvent) =>
               console.log({ acction: "Restablecer zoom", event }),
           },
-          childs: [],
-          showChilds: false,
+              childs: [],
+              showChilds: false,
         },
       ],
-    },
-  ],
-  styles: {
-    backgroundColor: "#444",
-    color: "#000",
-    border: "1px solid #ccc",
-    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
-    zIndex: "1000",
-  },
-};
-
-export const contextMenuNotifications: DMContextMenu = {
-  items: [
-    {
-      title: "Generar Notificación",
-      action: {},
-      childs: [
-        {
-          title: "error",
-          action: {
-            onClick: () => "error",
-          },
-          childs: [],
-          showChilds: false,
-        },
-        {
-          title: "warning",
-          action: {
-            onClick: () => "warning",
-          },
-          childs: [],
-          showChilds: false,
-        },
-        {
-          title: "info",
-          action: {
-            onClick: () => "info",
-          },
-          childs: [],
-          showChilds: false,
-        },
-        {
-          title: "success",
-          action: {
-            onClick: () => "success",
-          },
-          childs: [],
-          showChilds: false,
-        },
-      ],
-      showChilds: false,
     },
   ],
   styles: {

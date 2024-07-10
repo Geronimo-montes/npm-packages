@@ -1,20 +1,13 @@
-<div
-  class="context-menu-item"
-  (click)="closeMenuEmitter($event)"
-  (dblclick)="actions.onDblClick ? actions.onDblClick($event) : default"
-  (mouseout)="actions.onHover ? actions.onHover($event) : {}"
-  (contextmenu)="actions.onRgtClick ? actions.onRgtClick($event) : default"
->
-  {{ title }}
+<div class="context-menu-item" (click)="closeMenuEmitter($event)">
+  {{ item.title }}
 
   <!-- Sub Menu de items -->
-  <div *ngIf="childs.length > 0" class="sub-menu">
+  <div *ngIf="item.showChilds && item.childs.length > 0" class="sub-menu">
     <dm-item-context-menu
-      *ngFor="let item of childs"
-      [title]="item.title"
-      [actions]="item.action"
-      [childs]="item.childs ? item.childs : []"
-      (onSelectAcction)="onSelectAcction.emit($event)"
+      [dmHover]="item"
+      *ngFor="let item of item.childs"
+      [item]="item"
+      (onSelectAcction)="onClickItem.emit($event)"
     ></dm-item-context-menu>
   </div>
 </div>

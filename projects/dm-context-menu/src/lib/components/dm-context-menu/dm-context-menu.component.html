@@ -1,4 +1,4 @@
-<div dmContextMenu (dmContextMenuOpen)="onShowContextMenu($event)">
+<div *ngIf="menu" dmContextMenu (dmContextMenuOpen)="onShowContextMenu($event)">
   <div
     dmContextMenuContent
     [dmContextMenuContentShow]="showContextMenu"
@@ -8,10 +8,9 @@
   >
     <!-- Submenu normal -->
     <dm-item-context-menu
+      [dmHover]="item"
       *ngFor="let item of menu.items"
-      [title]="item.title"
-      [actions]="item.action"
-      [childs]="item.childs ? item.childs : []"
+      [item]="item"
       (onSelectAcction)="onEventAction($event)"
     ></dm-item-context-menu>
   </div>

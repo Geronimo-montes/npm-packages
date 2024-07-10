@@ -8,7 +8,8 @@ export interface StyleDMContextMenu {
 export interface DMContextMenuItem {
   title: string;
   action: ActionDMContextMenu;
-  childs?: DMContextMenuItem[];
+  childs: DMContextMenuItem[];
+  showChilds: boolean;
 }
 
 export const defaultActionDMContextMenu = ($event: MouseEvent) =>

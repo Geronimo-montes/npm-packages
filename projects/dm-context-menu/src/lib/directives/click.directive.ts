@@ -4,7 +4,7 @@ import { Directive, HostListener, Input } from "@angular/core";
   selector: "[dmClick]",
 })
 export class ClickDirective {
-  @Input("appClick") callback!: () => {};
+  @Input("dmClickCallback") callback!: any;
 
   @HostListener("click", ["$event"])
   onClick(event: Event) {

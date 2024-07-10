@@ -12,8 +12,8 @@ import {
 } from "./directives";
 
 const DIRECTIVES: any[] = [
-  // ClickDirective,
-  // HoverDirective,
+  ClickDirective,
+  HoverDirective,
   ContextMenuContentDirective,
   ContextMenuDirective,
 ];

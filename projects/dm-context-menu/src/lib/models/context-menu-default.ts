@@ -7,10 +7,14 @@ export const contextMenuDefault: DMContextMenu = {
   items: [
     {
       title: "Copy",
+      showChilds: false,
       action: {},
       childs: [
         {
           title: "Child 1",
+          showChilds: false,
+          childs: [],
+
           action: {
             onClick: (event: MouseEvent) => {
               console.log("asdfasdfsad");
@@ -19,34 +23,53 @@ export const contextMenuDefault: DMContextMenu = {
         },
         {
           title: "child 2",
+          showChilds: false,
+          childs: [],
+
           action: {},
         },
       ],
     },
     {
       title: "Paste",
+      showChilds: false,
+      childs: [],
+
       action: {},
     },
     {
       title: "Delete",
+      showChilds: false,
       action: {},
       childs: [
         {
           title: "Child 1",
+          showChilds: false,
+          childs: [],
+
           action: {},
         },
         {
           title: "child 2",
+          showChilds: false,
+          childs: [],
+
           action: {},
         },
       ],
     },
     {
       title: "Cut",
+      showChilds: false,
+      childs: [],
+
       action: {},
     },
     {
       title: "Rename",
+      showChilds: false,
+      childs: [],
+
       action: {},
     },
   ],

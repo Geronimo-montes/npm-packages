@@ -1,15 +1,25 @@
 import { Directive, HostListener, Input } from "@angular/core";
+import { DMContextMenuService } from "../services/dm-context-menu.service";
+import { DMContextMenuItem } from "../models/context-menu";
 
 @Directive({
-	selector: "[dmHover]",
+  selector: "[dmHover]",
 })
 export class HoverDirective {
-	@Input("appHover") action!: string;
+  constructor(protected readonly contextMenuService: DMContextMenuService) {}
 
-	@HostListener("mouseover", ["$event"])
-	onHover(event: Event) {
-		event.preventDefault();
-		// Handle the hover action, e.g., emit an event or call a service method
-		console.log(`Action: ${this.action}`);
-	}
+  @Input("dmHover") item!: DMContextMenuItem;
+
+  @HostListener("mouseover", ["$event"])
+  onHover(event: Event) {
+    event.preventDefault();
+    this.contextMenuService.showChilds(this.item);
+  }
+
+  @HostListener("mouseout", ["$event"])
+  onMouseOut(event: Event) {
+    console.log({ event });
+    event.preventDefault();
+    this.contextMenuService.reset(this.item);
+  }
 }

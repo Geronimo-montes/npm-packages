@@ -1,8 +1,15 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+} from "@angular/core";
 import {
   ActionDMContextMenu,
   DMContextMenuItem,
 } from "../../models/context-menu";
+import { DMContextMenuService } from "../../services/dm-context-menu.service";
 
 @Component({
   selector: "dm-item-context-menu",
@@ -10,7 +17,7 @@ import {
   styleUrls: ["./dm-item-context-menu.component.css"],
 })
 export class DMItemContextMenuComponent {
-  constructor() {}
+  constructor(protected readonly contextMenuService: DMContextMenuService) {}
 
   get default() {
     return () => {
@@ -19,20 +26,16 @@ export class DMItemContextMenuComponent {
   }
 
   closeMenuEmitter($event: MouseEvent) {
-    if (this.actions.onClick) {
-      this.onSelectAcction.emit(true);
-      return this.actions.onClick($event);
+    if (this.item.action.onClick) {
+      this.onClickItem.emit(true);
+      return this.item.action.onClick($event);
     } else {
-      this.onSelectAcction.emit(false);
+      this.onClickItem.emit(false);
       return this.default;
     }
   }
 
-  @Input("title") title!: string;
-  @Input("actions") actions!: ActionDMContextMenu;
-  @Input("childs") childs: DMContextMenuItem[] = [];
-  @Input("show-sub-menu") showChilds: boolean = false;
-  @Input("class") class: string = "context-menu-item";
+  @Input("item") item!: DMContextMenuItem;
 
-  @Output() onSelectAcction = new EventEmitter<boolean>();
+  @Output() onClickItem = new EventEmitter<any>();
 }
