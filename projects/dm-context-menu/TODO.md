@@ -1,0 +1,1 @@
+- [ ] Bind event to items on contextmenu.

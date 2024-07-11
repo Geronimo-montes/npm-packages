@@ -2,11 +2,9 @@ import {
   Directive,
   EventEmitter,
   HostListener,
-  Input,
-  Output,
+  Output
 } from "@angular/core";
 import { DMContextMenuService } from "../services/dm-context-menu.service";
-import { DMContextMenuItem } from "../models/context-menu";
 
 @Directive({
   selector: "[dmHover]",

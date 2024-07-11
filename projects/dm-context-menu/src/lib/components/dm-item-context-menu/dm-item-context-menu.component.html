@@ -1,4 +1,10 @@
-<div class="context-menu-item" dmHover (dmHover)="item.showChilds = $event">
+<div
+  class="context-menu-item"
+  dmHover
+  (dmHover)="item.showChilds = $event"
+  [dmClick]="item"
+  (valueEmitted)="onSelectAction.emit($event)"
+>
   <div>
     {{ item.title }}
   </div>

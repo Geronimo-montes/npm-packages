@@ -1,35 +1,30 @@
-import { Component, HostListener, Input, OnInit } from "@angular/core";
-import { DMContextMenu, PointXY } from "../../models/context-menu";
-import { contextMenuDefault } from "../../models/context-menu-default";
+import { Component, EventEmitter, Output } from "@angular/core";
+import { Observable, map } from "rxjs";
+import {
+  DMContextMenuItem,
+  DMContextmenuEventEmitt,
+} from "../../models/context-menu";
 import { DMContextMenuService } from "../../services/dm-context-menu.service";
-import { Observable } from "rxjs";
 
 @Component({
   selector: "dm-context-menu",
   templateUrl: "./dm-context-menu.component.html",
   styleUrls: ["./dm-context-menu.component.css"],
 })
-export class DMContextMenuComponent implements OnInit {
-  constructor(protected readonly contextmenuService: DMContextMenuService) {
-    this.contextmenuService.contextMenu$.subscribe(
-      (contextmenu: DMContextMenu) => (this.menu = contextmenu)
+export class DMContextMenuComponent {
+  constructor(protected readonly contextmenuService: DMContextMenuService) {}
+
+  get items$(): Observable<DMContextMenuItem[]> {
+    return this.contextmenuService.contextMenu$.pipe(
+      map((value) => value.items)
     );
   }
-
-  ngOnInit(): void {}
-
-  onShowContextMenu(show: any) {
-    this.showContextMenu = show;
-  }
-
-  onEventAction(event: any) {
-    this.showContextMenu = false;
-  }
-
   public showContextMenu: boolean = false;
 
-  // get menu() {
-  //   return new Observable((obs) => obs.next(this._menu));
-  // }
-  public menu: DMContextMenu | undefined;
+  selectAction(event: DMContextmenuEventEmitt) {
+    this.onSelectAction.emit(event);
+  }
+
+  @Output("onSelectAction") onSelectAction =
+    new EventEmitter<DMContextmenuEventEmitt>();
 }

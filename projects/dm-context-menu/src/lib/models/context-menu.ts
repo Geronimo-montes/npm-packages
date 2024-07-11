@@ -34,3 +34,9 @@ export interface PointXY {
   top: number;
   left: number;
 }
+
+export interface DMContextmenuEventEmitt {
+  item: DMContextMenuItem;
+  callback: (event: MouseEvent) => void;
+  nameAction: string;
+}

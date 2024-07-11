@@ -7,11 +7,15 @@ import {
   Renderer2,
 } from "@angular/core";
 
+/**
+ * HostListiner events on document for show/close ContextMenuCustom.7
+ * Disble default context-menu
+ */
 @Directive({
   selector: "[dmContextMenuContent]",
 })
 export class ContextMenuContentDirective {
-  @Input("dmContextMenuContentShow") show: boolean = false;
+  @Input("dmContextMenuContent") show: boolean = false;
   @HostBinding("style.display") display = "none";
   @HostBinding("style.position") position = "fixed";
   @HostBinding("style.top.px") top: number = 0;
