@@ -25,6 +25,9 @@
       ],
       "dm-faker-pro": [
         "./dist/dm-faker-pro"
+      ],
+      "dm-rest-api-helper": [
+        "./dist/dm-rest-api-helper"
       ]
 		},
 		"outDir": "./dist/out-tsc",
