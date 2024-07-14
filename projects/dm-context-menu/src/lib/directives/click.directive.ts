@@ -5,10 +5,7 @@ import {
   Input,
   Output,
 } from "@angular/core";
-import {
-  DMContextMenuItem,
-  DMContextmenuEventEmitt,
-} from "../models/context-menu";
+import { DMContextMenuItem } from "../models/context-menu";
 import { DMContextMenuService } from "../services/dm-context-menu.service";
 
 @Directive({
@@ -17,14 +14,11 @@ import { DMContextMenuService } from "../services/dm-context-menu.service";
 export class ClickDirective {
   constructor(protected readonly contextmenuService: DMContextMenuService) {}
 
-  @Input() dmClickitem!: DMContextMenuItem;
-  @Output() valueEmitted = new EventEmitter<DMContextMenuItem>();
+  @Input("dmClick") dmClickitem!: DMContextMenuItem;
 
   @HostListener("click", ["$event"])
   onClick(event: MouseEvent) {
     event.preventDefault();
-
-    this.valueEmitted.emit(this.dmClickitem);
-    this.contextmenuService.closeMenu();
+    this.contextmenuService.selectItem(this.dmClickitem);
   }
 }

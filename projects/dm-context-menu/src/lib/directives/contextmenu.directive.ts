@@ -1,16 +1,15 @@
 import { Directive, HostListener, Output, EventEmitter } from "@angular/core";
+import { DMContextMenuService } from "../services/dm-context-menu.service";
 
 @Directive({
   selector: "[dmContextMenu]",
 })
 export class ContextMenuDirective {
-  @Output() dmContextMenu = new EventEmitter<boolean>();
-
-  constructor() {}
+  constructor(private readonly contextMenuService: DMContextMenuService) {}
 
   @HostListener("document:contextmenu", ["$event"])
   onContextMenu(event: MouseEvent) {
     event.preventDefault(); // Evita que aparezca el menú contextual nativo del navegador
-    this.dmContextMenu.emit(true); // Emite el evento personalizado para abrir el menú contextual
+    this.contextMenuService.showMenu(true);
   }
 }
