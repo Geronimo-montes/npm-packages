@@ -1,34 +1,85 @@
-import { Inject, Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, Subject } from "rxjs";
-import { DMContextMenu, DMContextMenuItem } from "../models/context-menu";
+import { Inject, Injectable, OnDestroy } from "@angular/core";
+import { BehaviorSubject, Observable, of, Subject, from } from "rxjs";
+import { expand, takeUntil, tap } from "rxjs/operators";
+import {
+  DMContextMenu,
+  DMContextMenuItem,
+  PositionTopLefth,
+} from "../models/context-menu";
 
 @Injectable()
-export class DMContextMenuService {
-  //
+export class DMContextMenuService implements OnDestroy {
+  public destroy$ = new Subject();
 
   private _contextMenu: DMContextMenu;
-  public contextMenu$: Observable<DMContextMenu>;
-  public items$: Observable<DMContextMenuItem[]>;
-  public showContextMenu$: Observable<boolean>;
+  private _position: PositionTopLefth;
+  private positionMenu: BehaviorSubject<PositionTopLefth>;
   private subMenu: BehaviorSubject<DMContextMenu>;
-  private subItems: BehaviorSubject<DMContextMenuItem[]>;
   private subShowMenu = new BehaviorSubject<boolean>(false);
+  private selectedItemSubject = new Subject<DMContextMenuItem>();
+
+  /**
+   * Subject to emit submenu updates.
+   * In the constructor, subscribes to submenu updates.
+   */
+  private subMenuUpdates = new Subject<DMContextMenuItem>();
+
+  /**
+   * Observable for the current menu position.
+   */
+  public positionMenu$: Observable<PositionTopLefth>;
+
+  /**
+   * Observable for the context menu.
+   */
+  public contextMenu$: Observable<DMContextMenu>;
+
+  /**
+   * Observable for the context menu show state.
+   */
+  public showMenu$: Observable<boolean>;
+
+  /**
+   * Observable for the selected item.
+   */
+  public selectedItem$ = this.selectedItemSubject.asObservable();
 
   constructor(
     @Inject("CONTEXT_MENU_CONFIG") private contextMenuConfig: DMContextMenu
   ) {
     this._contextMenu = contextMenuConfig;
+    this._position = { left: 0, top: 0 };
     this.subMenu = new BehaviorSubject<DMContextMenu>(this._contextMenu);
-    this.subItems = new BehaviorSubject<DMContextMenuItem[]>(
-      this._contextMenu.items
-    );
+    this.positionMenu = new BehaviorSubject<PositionTopLefth>(this._position);
     this.contextMenu$ = this.subMenu.asObservable();
-    this.items$ = this.subItems.asObservable();
-    this.showContextMenu$ = this.subShowMenu.asObservable();
+    this.showMenu$ = this.subShowMenu.asObservable();
+    this.positionMenu$ = this.positionMenu.asObservable();
+
+    this.subMenuUpdates
+      .pipe(
+        expand((item: DMContextMenuItem) =>
+          item.childs && item.childs.length > 0 ? of(...item.childs) : of()
+        ),
+        tap((item: DMContextMenuItem) => (item.showChilds = false)),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        complete: () => this.updateItems(),
+      });
   }
 
-  public showContextMenu(show: boolean) {
+  ngOnDestroy(): void {
+    this.destroy$.next(false);
+    this.destroy$.complete();
+  }
+
+  public showMenu(show: boolean) {
+    if (!show) this.closeMenu();
     this.subShowMenu.next(show);
+  }
+
+  public updatePosition(pointer: PositionTopLefth) {
+    this.positionMenu.next(pointer);
   }
 
   public toggleContextMenuItem(toggle: boolean, item: DMContextMenuItem) {
@@ -37,23 +88,20 @@ export class DMContextMenuService {
   }
 
   public updateItems() {
-    this.subItems.next([...this._contextMenu.items]);
+    this.subMenu.next({
+      ...this._contextMenu,
+      items: [...this._contextMenu.items],
+    });
   }
 
   public closeMenu() {
-    const setFlagRecursive = (item: DMContextMenuItem) => {
-      item.showChilds = false;
+    this._contextMenu.items.forEach((item) => this.subMenuUpdates.next(item));
+  }
 
-      if (item.childs && item.childs.length > 0) {
-        item.childs.forEach((child) => setFlagRecursive(child));
-      }
-    };
-
-    const setFlagOnAllItems = (items: DMContextMenuItem[]) => {
-      items.forEach((item) => setFlagRecursive(item));
-    };
-
-    setFlagOnAllItems(this._contextMenu.items);
-    this.updateItems();
+  public selectItem(item: DMContextMenuItem) {
+    if (!item.childs.length) {
+      this.selectedItemSubject.next(item);
+      this.closeMenu();
+    }
   }
 }
