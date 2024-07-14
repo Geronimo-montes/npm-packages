@@ -14,9 +14,8 @@
 }
 
 .sub-menu {
-  display: none;
   position: absolute;
-  top: -25%;
+  top: 0%;
   left: 100%; /* Posiciona el submenú al costado derecho del menú principal */
   background-color: #333;
   border: 1px solid #444;

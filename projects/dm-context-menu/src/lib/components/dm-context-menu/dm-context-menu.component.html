@@ -1,14 +1,13 @@
-<div (dmContextMenu)="showContextMenu = $event"></div>
-<div
-  class="context-menu"
-  [dmContextMenuContent]="showContextMenu"
-  *ngIf="showContextMenu"
->
-  <dm-item-context-menu
-    *ngFor="let item of items$ | async"
-    [item]="item"
-    dmClick
-    [dmClickitem]="item"
-    (valueEmitted)="selectAction(item)"
-  ></dm-item-context-menu>
-</div>
+<div dmContextMenu></div>
+<ng-container>
+  <div
+    class="context-menu"
+    [dmContextMenuContent]="showMenu"
+    *ngIf="showMenu"
+  >
+    <dm-item-context-menu
+      *ngFor="let item of items$ | async"
+      [item]="item"
+    ></dm-item-context-menu>
+  </div>
+</ng-container>

@@ -30,7 +30,7 @@ export type StringActionDMContextMenu =
   | "onDoubleClick"
   | "onRightClick";
 
-export interface PointXY {
+export interface PositionTopLefth {
   top: number;
   left: number;
 }
