@@ -1,8 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import {
-  DMContextMenuItem,
-  DMContextmenuEventEmitt,
-} from "../../models/context-menu";
+import { DMContextMenuItem } from "../../models/context-menu";
 
 @Component({
   selector: "dm-item-context-menu",
@@ -11,7 +8,12 @@ import {
 })
 export class DMItemContextMenuComponent {
   @Input("item") item!: DMContextMenuItem;
+  @Input("firstElement") firstElement!: boolean;
 
   @Output("onSelectAction") onSelectAction =
-    new EventEmitter<DMContextmenuEventEmitt>();
+    new EventEmitter<DMContextMenuItem>();
+
+  selectAction(event: DMContextMenuItem) {
+    this.onSelectAction.emit(event);
+  }
 }

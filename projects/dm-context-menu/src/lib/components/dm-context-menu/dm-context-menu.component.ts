@@ -1,9 +1,6 @@
-import { Component, EventEmitter, Output } from "@angular/core";
-import { Observable, map } from "rxjs";
-import {
-  DMContextMenuItem,
-  DMContextmenuEventEmitt,
-} from "../../models/context-menu";
+import { Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { Observable } from "rxjs";
+import { DMContextMenuItem } from "../../models/context-menu";
 import { DMContextMenuService } from "../../services/dm-context-menu.service";
 
 @Component({
@@ -11,20 +8,32 @@ import { DMContextMenuService } from "../../services/dm-context-menu.service";
   templateUrl: "./dm-context-menu.component.html",
   styleUrls: ["./dm-context-menu.component.css"],
 })
-export class DMContextMenuComponent {
+export class DMContextMenuComponent implements OnInit {
   constructor(protected readonly contextmenuService: DMContextMenuService) {}
 
-  get items$(): Observable<DMContextMenuItem[]> {
-    return this.contextmenuService.contextMenu$.pipe(
-      map((value) => value.items)
+  ngOnInit(): void {
+    this.contextmenuService.showContextMenu$.subscribe(
+      (show) => (this.showContextMenu = show)
     );
   }
-  public showContextMenu: boolean = false;
 
-  selectAction(event: DMContextmenuEventEmitt) {
+  get items$(): Observable<DMContextMenuItem[]> {
+    return this.contextmenuService.items$;
+  }
+
+  toggleContextMenu(show: boolean) {
+    this.contextmenuService.showContextMenu(show);
+  }
+
+  getshowContextMenu(): Observable<boolean> {
+    return this.contextmenuService.showContextMenu$;
+  }
+
+  selectAction(event: DMContextMenuItem) {
     this.onSelectAction.emit(event);
   }
 
   @Output("onSelectAction") onSelectAction =
-    new EventEmitter<DMContextmenuEventEmitt>();
+    new EventEmitter<DMContextMenuItem>();
+  public showContextMenu: boolean = false;
 }

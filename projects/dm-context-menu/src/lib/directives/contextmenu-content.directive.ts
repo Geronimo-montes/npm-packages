@@ -15,7 +15,7 @@ import {
   selector: "[dmContextMenuContent]",
 })
 export class ContextMenuContentDirective {
-  @Input("dmContextMenuContent") show: boolean = false;
+  @Input("dmContextMenuContent") show: boolean | null = false;
   @HostBinding("style.display") display = "none";
   @HostBinding("style.position") position = "fixed";
   @HostBinding("style.top.px") top: number = 0;

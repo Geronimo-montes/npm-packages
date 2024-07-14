@@ -8,21 +8,36 @@ export class DMContextMenuService {
 
   private _contextMenu: DMContextMenu;
   public contextMenu$: Observable<DMContextMenu>;
-  private subjectContextMenu: BehaviorSubject<DMContextMenu>;
-  private subjectShowContextMenu = new BehaviorSubject<boolean>(false);
+  public items$: Observable<DMContextMenuItem[]>;
+  public showContextMenu$: Observable<boolean>;
+  private subMenu: BehaviorSubject<DMContextMenu>;
+  private subItems: BehaviorSubject<DMContextMenuItem[]>;
+  private subShowMenu = new BehaviorSubject<boolean>(false);
 
   constructor(
     @Inject("CONTEXT_MENU_CONFIG") private contextMenuConfig: DMContextMenu
   ) {
     this._contextMenu = contextMenuConfig;
-    this.subjectContextMenu = new BehaviorSubject<DMContextMenu>(
-      this._contextMenu
+    this.subMenu = new BehaviorSubject<DMContextMenu>(this._contextMenu);
+    this.subItems = new BehaviorSubject<DMContextMenuItem[]>(
+      this._contextMenu.items
     );
-    this.contextMenu$ = this.subjectContextMenu.asObservable();
+    this.contextMenu$ = this.subMenu.asObservable();
+    this.items$ = this.subItems.asObservable();
+    this.showContextMenu$ = this.subShowMenu.asObservable();
   }
 
-  public toggleContextMenu(toggle: boolean) {
-    this.subjectShowContextMenu.next(toggle);
+  public showContextMenu(show: boolean) {
+    this.subShowMenu.next(show);
+  }
+
+  public toggleContextMenuItem(toggle: boolean, item: DMContextMenuItem) {
+    item.showChilds = toggle;
+    this.updateItems();
+  }
+
+  public updateItems() {
+    this.subItems.next([...this._contextMenu.items]);
   }
 
   public closeMenu() {
@@ -39,5 +54,6 @@ export class DMContextMenuService {
     };
 
     setFlagOnAllItems(this._contextMenu.items);
+    this.updateItems();
   }
 }

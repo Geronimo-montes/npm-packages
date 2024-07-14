@@ -25,7 +25,7 @@ const COMPONENTS: any[] = [DMContextMenuComponent, DMItemContextMenuComponent];
 @NgModule({
   imports: [CommonModule, BrowserModule],
   declarations: [...COMPONENTS, ...DIRECTIVES],
-  exports: [...COMPONENTS],
+  exports: [...COMPONENTS, ...DIRECTIVES],
   providers: [...SERVICES],
 })
 export class DMContextMenuModule {}

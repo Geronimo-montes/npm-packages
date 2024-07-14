@@ -1,9 +1,10 @@
 <div
   class="context-menu-item"
+  dmClick
+  [dmClickitem]="item"
+  (valueEmitted)="selectAction(item)"
   dmHover
   (dmHover)="item.showChilds = $event"
-  [dmClick]="item"
-  (valueEmitted)="onSelectAction.emit($event)"
 >
   <div>
     {{ item.title }}
@@ -13,6 +14,9 @@
     <dm-item-context-menu
       *ngFor="let child of item.childs"
       [item]="child"
+      dmClick
+      [dmClickitem]="child"
+      (valueEmitted)="selectAction(child)"
     ></dm-item-context-menu>
   </div>
 </div>
