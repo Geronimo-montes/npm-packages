@@ -25,6 +25,12 @@
       ],
       "dm-faker-pro": [
         "./dist/dm-faker-pro"
+      ],
+      "dm-game-utils": [
+        "./dist/dm-game-utils"
+      ],
+      "dm-games-utils": [
+        "./dist/dm-games-utils"
       ]
 		},
 		"outDir": "./dist/out-tsc",
