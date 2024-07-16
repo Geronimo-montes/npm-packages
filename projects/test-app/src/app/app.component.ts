@@ -21,7 +21,7 @@ export class AppComponent {
   }
 
   create(): DMNotification {
-    const type = this.accionSelected ? this.accionSelected.title : "error";
+    const type = this.accionSelected ? this.accionSelected.title : "info";
     return {
       title: `Titulo: ${type}`,
       type: <DMNotificationType>type,
