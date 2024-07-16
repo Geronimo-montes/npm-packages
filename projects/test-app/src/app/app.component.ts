@@ -3,7 +3,7 @@ import { contextMenuNotifications } from "../../../dm-context-menu/src/lib/mock/
 import { DMContextMenuItem } from "../../../dm-context-menu/src/public-api";
 import {
   DMNotification,
-  DMNotificationType
+  DMNotificationType,
 } from "../../../dm-custom-notifier/src/public-api";
 
 @Component({
@@ -18,6 +18,7 @@ export class AppComponent {
 
   heandle(event: any) {
     console.log({ origin: "root", event });
+    this.accionSelected = event;
   }
 
   create(): DMNotification {
