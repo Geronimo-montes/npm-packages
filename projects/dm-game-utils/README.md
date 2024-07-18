@@ -20,6 +20,7 @@ ng generate library dm-game-utils
 && ng generate directive dm-game-utils/directives/DMFakerPro --project=dm-game-utils \
 && ng generate pipe dm-game-utils/pipes/DMFakerPro --project=dm-game-utils \
 && ng generate service dm-game-utils/services/DM-FakerProLocale --project=dm-game-utils
+&& ng generate class dm-game-utils/helpers/dm-game-manager --project=dm-game-utils
 ```
 
 ## Code scaffolding

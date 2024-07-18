@@ -1,13 +1,18 @@
 /** @format */
 
-import { CanvasContextNotAvailableError, GlobalConfigRenderNotProvidedError, InvalidCanvasElementError, ObjectRenderListNotAvailableError } from "../errors/dm-render.exception";
-import { DMGame } from "../models/dm-game.model";
+import {
+  CanvasContextNotAvailableError,
+  GameManagerHelperNotAvailableError,
+  InvalidCanvasContext2DElementError,
+  InvalidCanvasElementError,
+} from "../errors/dm-render.exception";
+import DmGameManager from "../models/dm-game-manager.model";
 import {
   DMCanvasElementRef,
-  DMGlobalConfigRender,
   DMObjRenderList,
   DMPoint,
-} from "../models/dm-render.model";
+  DMRenderFunc,
+} from "../models/dm-render.interface";
 
 /**
  * Renders a list of objects onto a canvas element.
@@ -15,57 +20,42 @@ import {
  * @param {DMCanvasElementRef} canvas - The canvas element to render onto.
  * @param {DMObjRenderList} objectRenderList - The list of objects to render.
  */
-export const dmRender = (
+export const DMRenderHelper: DMRenderFunc = (
   canvas: DMCanvasElementRef,
-  objectRenderList?: DMObjRenderList,
-  globalConfigRender?: DMGlobalConfigRender,
-  game?: DMGame
+  gameManage: DmGameManager
 ): void => {
+  if (!gameManage) throw new GameManagerHelperNotAvailableError();
 
-  if (!canvas) {
+  if (!canvas) throw new InvalidCanvasElementError();
+
+  if (canvas instanceof HTMLCanvasElement)
     throw new InvalidCanvasElementError();
-  }
+  else if (!(canvas instanceof CanvasRenderingContext2D))
+    throw new InvalidCanvasContext2DElementError();
 
-  if (!globalConfigRender) {
-    throw new GlobalConfigRenderNotProvidedError();
-  }
-
-  if (!(canvas instanceof HTMLCanvasElement)
-    && !(canvas instanceof CanvasRenderingContext2D)) {
-    throw new InvalidCanvasElementError();
-  }
-
-  const ctx = (canvas instanceof HTMLCanvasElement)
-    ? canvas.getContext("2d")
-    : canvas
+  const ctx =
+    canvas instanceof HTMLCanvasElement ? canvas.getContext("2d") : canvas;
 
   if (!ctx) {
     throw new CanvasContextNotAvailableError();
   }
 
-  if (!objectRenderList) {
-    throw new ObjectRenderListNotAvailableError();
-  }
+  const { heightGrid, widthGrid, pixel } = gameManage.getRenderSettings();
 
-  /**
-   * Draws a point on the canvas with the specified color.
-   *
-   * @param {DMPoint} point - The point to draw on the canvas.
-   * @param {string} color - The color of the point.
-   */
+  ctx.clearRect(0, 0, widthGrid, heightGrid);
+
   const drawPoint = (point: DMPoint, color: string) => {
     ctx.fillStyle = color;
-    ctx.fillRect(
-      point.x * globalConfigRender.pixel,
-      point.y * globalConfigRender.pixel,
-      globalConfigRender.pixel,
-      globalConfigRender.pixel
-    );
+    ctx.fillRect(point.x * pixel, point.y * pixel, pixel, pixel);
   };
 
-  objectRenderList.forEach(({ object, configRender }) => {
+  gameManage.render().forEach(({ object, configRender }) => {
     const { color, points } = configRender;
-    if (!color || !points) return;
+
+    if (!color || !points) {
+      return;
+    }
+
     points.forEach((point) => {
       drawPoint(point, color);
     });

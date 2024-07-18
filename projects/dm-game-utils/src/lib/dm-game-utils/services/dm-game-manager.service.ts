@@ -1,4 +1,5 @@
-import { APP_INITIALIZER, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
+import { DMConfigGameManager } from "../models/dm-game-manager.interface";
 
 /**
  * Para inyectar la configuracion al servicio se debe idicar en el modulo.
@@ -29,10 +30,9 @@ export class DMGameManagerService {
    * @param config
    * @returns
    */
-  initialize(config: any): Promise<void> {
+  initialize(config: DMConfigGameManager): Promise<void> {
     return new Promise((resolver) => {
       this.config = config;
-      // ...
       console.log({ msj: "Current Config", config: this.config });
       resolver();
     });
