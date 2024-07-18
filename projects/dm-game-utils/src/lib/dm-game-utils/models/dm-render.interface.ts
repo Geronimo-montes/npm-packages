@@ -23,6 +23,7 @@ export interface DMGlobalConfigRender {
   pixel: number;
   heightGrid: number;
   widthGrid: number;
+  canvasSize: number;
   // skinDefault?: string;
   // colorDefault?: string;
   // render?: DMRenderFunc; // Render function custom, if not exists, use the default one
@@ -68,7 +69,9 @@ export interface DMRenderSettingsInterface {
 const renderAbs = (
   canvas: DMCanvasElementRef,
   gameManager: DmGameManager
-) => {};
+): DMObjRenderList => {
+  return [];
+};
 
 /**
  * Function responsible for rendering the game objects on the canvas.

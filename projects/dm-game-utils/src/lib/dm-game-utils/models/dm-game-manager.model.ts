@@ -3,6 +3,7 @@ import {
   DMConfigCollision,
   DMListObjects,
 } from "./dm-colaider.interface";
+import { DMGameLogic, DMGameLogicList } from "./dm-game-manager.interface";
 import {
   DMGlobalConfigRender,
   DMObjRenderList,
@@ -13,22 +14,41 @@ import {
 export default class DmGameManager
   implements DMRenderSettingsInterface, DMRenderInterface, DMColliderInterface
 {
-  //
-  constructor() {} // ... INYECTAR DEPS
+  constructor(
+    gameLogicIntancesList: DMGameLogicList,
+    renderSettings: DMGlobalConfigRender
+  ) {
+    this.gameLogicIntancesList = gameLogicIntancesList;
+    this.renderSettings = renderSettings;
+  }
 
   public detectCollisions(): DMListObjects {
-    throw new Error("Method not implemented.");
+    return this.gameLogicIntancesList
+      .map((value) => (<DMColliderInterface>value).detectCollisions())
+      .flat(1);
   }
 
   public getConfigCollision(): DMConfigCollision {
-    throw new Error("Method not implemented.");
+    return {
+      minX: 0,
+      maxX: this.renderSettings.widthGrid,
+      minY: 0,
+      maxY: this.renderSettings.heightGrid,
+    };
   }
 
   public render(): DMObjRenderList {
-    throw new Error("Method not implemented.");
+    return this.gameLogicIntancesList
+      .map((value) => (<DMRenderInterface>value).render())
+      .flat(1);
   }
 
   public getRenderSettings(): DMGlobalConfigRender {
-    throw new Error("Method not implemented.");
+    return this.renderSettings;
   }
+
+  public loop() {}
+
+  private gameLogicIntancesList: DMGameLogicList;
+  private renderSettings: DMGlobalConfigRender;
 }

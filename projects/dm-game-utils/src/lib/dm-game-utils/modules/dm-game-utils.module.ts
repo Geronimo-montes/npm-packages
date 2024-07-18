@@ -7,8 +7,8 @@ import { KeyArrowUpDirective } from "../directives/dm-key-arrow-up.directive";
 import { DMGameManagerService } from "../services/dm-game-manager.service";
 import {
   dmConfigInitGameManager,
-  dmInicializerGameManager,
-} from "../helpers/dm-inicializer-game-manager.helper";
+  DMGameManagerHelper,
+} from "../helpers/dm-game-manager.helper";
 import { DmGameUtilsPipe } from "../pipes/dm-game-utils.pipe";
 
 @NgModule({
@@ -35,7 +35,7 @@ import { DmGameUtilsPipe } from "../pipes/dm-game-utils.pipe";
       provide: APP_INITIALIZER,
       // FIXME: On deps include Service y config?
       deps: [dmConfigInitGameManager, DMGameManagerService],
-      useFactory: dmInicializerGameManager,
+      useFactory: DMGameManagerHelper,
 
       multi: true,
     },
