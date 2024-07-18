@@ -1,0 +1,4 @@
+- [ ] <Directives> Add directives for hostlisting : Keywords[Enter, Esc, Espace, Backspace, ...]
+- [ ] <Helpers> Add helpers for colaider detection.
+- [ ] <Models> Complete models for game utils.
+- [ ] <URGENTE> Update de list task pendings.
