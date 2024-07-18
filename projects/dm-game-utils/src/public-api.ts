@@ -2,6 +2,4 @@
  * Public API Surface of dm-game-utils
  */
 
-export * from './lib/dm-game-utils.service';
-export * from './lib/dm-game-utils.component';
-export * from './lib/dm-game-utils.module';
+export { DmGameUtilsModule } from "./lib/dm-game-utils/modules/dm-game-utils.module";
