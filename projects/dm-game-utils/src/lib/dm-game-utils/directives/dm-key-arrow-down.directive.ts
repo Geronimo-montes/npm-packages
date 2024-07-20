@@ -8,7 +8,7 @@ export class KeyArrowDownDirective {
     new EventEmitter();
   constructor() {}
 
-  @HostListener("keydown.arrowdown", ["$event"])
+  @HostListener("window:keydown.arrowdown", ["$event"])
   onKeyArrowDowm($event: KeyboardEvent) {
     this.dmKeyArrowDown.emit($event);
   }

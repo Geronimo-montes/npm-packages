@@ -1,11 +1,8 @@
+import { DmColaiderHelper } from "../helpers/dm-colaider.helper";
 import DmGameManager from "./dm-game-manager.model";
 import { DMPoint } from "./dm-render.interface";
 
-const colliderPrototype = (game: DmGameManager): DMCollisionResult[] => {
-  return [];
-};
-
-export type DMColliderFunc = typeof colliderPrototype;
+export type DMColliderFunc = typeof DmColaiderHelper;
 
 export interface DMConfigCollision {
   minX: number;

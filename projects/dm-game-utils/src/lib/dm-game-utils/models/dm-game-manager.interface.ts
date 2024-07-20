@@ -1,35 +1,103 @@
-import { DMColliderFunc } from "./dm-colaider.interface";
-import DmGameManager from "./dm-game-manager.model";
+import { InjectionToken } from "@angular/core";
+import { SnakeMainGame } from "../games/snake/snake.model";
+import { DmColaiderHelper } from "../helpers/dm-colaider.helper";
+import { DMRenderHelper } from "../helpers/dm-render.helper";
+import { DMCanvasConfig } from "./dm-canvas-grid.interface";
 import {
-  DMConfigRender,
-  DMGlobalConfigRender,
-  DMRenderFunc,
-  DMRenderSettingsInterface,
-} from "./dm-render.interface";
-
+  DMColliderFunc,
+  DMConfigCollision,
+  DMListObjects,
+} from "./dm-colaider.interface";
+import { DMObjRenderList, DMRenderFunc } from "./dm-render.interface";
 /**
- * Interface initializer config options
+ * Interfaz DMGameLogic
+ *
+ * Esta interfaz define la estructura necesaria para la lógica del juego.
+ * Proporciona métodos para manejar entradas, ejecutar bucles de juego,
+ * renderizar objetos y detectar colisiones.
  */
-export interface DMConfigGameManager {
-  colliderHelper: DMColliderFunc;
-  rendererHelper: DMRenderFunc;
-  renderSettings: DMGlobalConfigRender;
-  listGameClass: DMGameLogicList[];
+export interface DMGameManageAPI {
+  /**
+   * Maneja la entrada del usuario.
+   *
+   * @param key - La tecla presionada por el usuario.
+   */
+  inputHandler(key: string): void;
+
+  /**
+   * Establece una tecla específica.
+   *
+   * @param key - La tecla a ser establecida.
+   */
+  setKey(key: string): void;
+
+  /**
+   * Ejecuta el bucle principal del juego.
+   */
+  loop(): void;
+
+  /**
+   * Renderiza la lista de objetos del juego.
+   *
+   * @returns {DMObjRenderList} - Una lista de objetos para renderizar.
+   */
+  render(): DMObjRenderList;
+
+  /**
+   * Detecta colisiones entre objetos en el juego.
+   *
+   * @returns {DMListObjects} - Una lista de objetos que han colisionado.
+   */
+  detectCollisions(): DMListObjects;
+
+  /**
+   * Obtiene la configuración de colisiones.
+   *
+   * @returns {DMConfigCollision} - La configuración de colisiones.
+   */
+  getConfigCollision(): DMConfigCollision;
 }
 
-/**
- * Clase base para crear la logica de juego mantieniedo la relacion entre las instancias de clase
- */
-export abstract class DMGameLogic {}
-
-/**
- * Class list the logic game.
- */
-export type DMGameLogicList = Array<DMGameLogic>;
+// export class DMGameManagerAPI implements DMGameManageInterface {
+//   public inputHandler(key: string): void {
+//     throw new Error("Method not implemented.");
+//   }
+//   public setKey(key: string): void {
+//     throw new Error("Method not implemented.");
+//   }
+//   public loop(): void {
+//     throw new Error("Method not implemented.");
+//   }
+//   public render(): DMObjRenderList {
+//     throw new Error("Method not implemented.");
+//   }
+//   public detectCollisions(): DMListObjects {
+//     throw new Error("Method not implemented.");
+//   }
+//   public getConfigCollision(): DMConfigCollision {
+//     throw new Error("Method not implemented.");
+//   }
+// }
 
 export interface DMConfigGameManagerService {
-  gameManager: DmGameManager;
-  renderSettings: DMGlobalConfigRender;
-  renderHelper: DMRenderFunc;
+  rendererHelper: DMRenderFunc;
   colliderHelper: DMColliderFunc;
+  canvasConfig: DMCanvasConfig;
+  mainClassGame: DMGameManageAPI;
 }
+
+export const DEFAULT_CONFIG: DMConfigGameManagerService = {
+  rendererHelper: DMRenderHelper,
+  colliderHelper: DmColaiderHelper,
+  canvasConfig: {
+    heightCanvas: 600,
+    widthCanvas: 800,
+    heightGrid: 50,
+    widthGrid: 50,
+    pixel: 10,
+  },
+  mainClassGame: new SnakeMainGame(),
+};
+
+export const DM_CONFIG_SERVICE: InjectionToken<DMConfigGameManagerService> =
+  new InjectionToken<DMConfigGameManagerService>("DM_CONFIG_SERVICE");

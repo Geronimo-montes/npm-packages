@@ -4,13 +4,15 @@ import {
   DMColliderFunc,
   DMCollisionResult,
 } from "../models/dm-colaider.interface";
-import { DMConfigGameManagerService } from "../models/dm-game-manager.interface";
-import DmGameManager from "../models/dm-game-manager.model";
 import {
-  DMGlobalConfigRender,
-  DMObjRenderList,
-  DMRenderFunc,
-} from "../models/dm-render.interface";
+  DEFAULT_CONFIG,
+  DMConfigGameManagerService,
+  DMGameManageAPI,
+} from "../models/dm-game-manager.interface";
+import { KeyboardKey } from "../models/dm-key.interface";
+import { DMObjRenderList, DMRenderFunc } from "../models/dm-render.interface";
+import DmGameManager from "../models/dm-game-manager.model";
+import { DMCanvasConfig } from "../models/dm-canvas-grid.interface";
 
 /**
  * To inject the configuration into the service, it must be specified in the module.
@@ -32,13 +34,17 @@ import {
   providedIn: "root",
 })
 export class DMGameManagerService {
-  private gameManager!: DmGameManager;
-  private renderSettings!: DMGlobalConfigRender;
-  private renderHelper!: DMRenderFunc;
+  private mainClassGame!: DMGameManageAPI;
+  private canvasConfig!: DMCanvasConfig;
+  private rendererHelper!: DMRenderFunc;
   private colliderHelper!: DMColliderFunc;
+  private config: DMConfigGameManagerService = {} as DMConfigGameManagerService;
   private loop = interval(100);
+  bufferKey: KeyboardKey[] = [];
 
-  constructor() {}
+  constructor() {
+    this.initialize(DEFAULT_CONFIG);
+  }
 
   /**
    * Starts the main game loop.
@@ -48,12 +54,27 @@ export class DMGameManagerService {
   start(canvas: any) {
     this.loop
       .pipe(
-        map(() => this.colliderHelper(this.gameManager)),
-        tap(() => this.renderHelper(canvas, this.gameManager)),
+        map(() => {
+          this.mainClassGame.setKey(<string>this.getKey());
+          return this.colliderHelper(this.mainClassGame, this.canvasConfig);
+        }),
+        tap(() =>
+          this.rendererHelper(canvas, this.mainClassGame, this.canvasConfig)
+        ),
         takeWhile((collisions) => this.validateCollisions(collisions)),
-        tap(() => this.gameManager.loop())
+        tap(() => this.mainClassGame.loop())
       )
       .subscribe(() => {});
+  }
+
+  addBufferKey(key: string) {
+    this.bufferKey.push(<KeyboardKey>key);
+  }
+
+  getKey() {
+    const key = this.bufferKey.pop();
+    this.bufferKey = [];
+    return key;
   }
 
   /**
@@ -63,28 +84,19 @@ export class DMGameManagerService {
    * @param config The configuration needed to initialize the service.
    * @returns A promise that resolves when the service has been initialized.
    */
-  initialize({
-    gameManager,
-    renderSettings,
-    renderHelper: render,
-    colliderHelper: collider,
-  }: DMConfigGameManagerService): Promise<void> {
+  initialize(config: DMConfigGameManagerService): Promise<void> {
     return new Promise((resolve) => {
-      this.gameManager = gameManager;
-      this.renderSettings = renderSettings;
-      this.renderHelper = render;
-      this.colliderHelper = collider;
-
       console.log({
-        msg: "Current Config",
-        config: {
-          gameManager: this.gameManager,
-          renderSettings: this.renderSettings,
-          colliderHelper: this.colliderHelper,
-          renderHelper: this.renderHelper,
-        },
+        CurrentConfig: this.config,
+        NewConfig: config,
       });
 
+      this.mainClassGame = config.mainClassGame;
+      this.canvasConfig = config.canvasConfig;
+      this.rendererHelper = config.rendererHelper;
+      this.colliderHelper = config.colliderHelper;
+
+      this.config = config;
       resolve();
     });
   }
@@ -95,12 +107,7 @@ export class DMGameManagerService {
    * @returns The current service configuration.
    */
   public getCurrentConfig(): DMConfigGameManagerService {
-    return {
-      gameManager: this.gameManager,
-      renderSettings: this.renderSettings,
-      colliderHelper: this.colliderHelper,
-      renderHelper: this.renderHelper,
-    };
+    return this.config;
   }
 
   /**
@@ -109,7 +116,7 @@ export class DMGameManagerService {
    * @returns The list of rendered objects.
    */
   render(): DMObjRenderList {
-    return this.gameManager.render();
+    return this.mainClassGame.render();
   }
 
   /**
@@ -122,6 +129,13 @@ export class DMGameManagerService {
     // TODO: Add global property for helper validator state collisions
     return true;
   }
+  /**
+   * Retrieves the canvas configuration.
+   *
+   * @return {DMCanvasConfig} The canvas configuration.
+   */
 
-  // TODO: Send user input to the game.
+  public getCanvasConfig(): DMCanvasConfig {
+    return this.canvasConfig;
+  }
 }

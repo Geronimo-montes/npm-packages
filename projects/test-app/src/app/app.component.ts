@@ -3,7 +3,7 @@ import { contextMenuNotifications } from "../../../dm-context-menu/src/lib/mock/
 import { DMContextMenuItem } from "../../../dm-context-menu/src/public-api";
 import {
   DMNotification,
-  DMNotificationType
+  DMNotificationType,
 } from "../../../dm-custom-notifier/src/public-api";
 
 @Component({
@@ -15,10 +15,6 @@ export class AppComponent {
   contextMenu = contextMenuNotifications;
   accionSelected?: DMContextMenuItem;
   constructor() {}
-
-  heandle(event: any) {
-    console.log({ origin: "root", event });
-  }
 
   create(): DMNotification {
     const type = this.accionSelected ? this.accionSelected.title : "info";

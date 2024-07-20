@@ -5,11 +5,13 @@ import { KeyArrowLeftDirective } from "../directives/dm-key-arrow-left.directive
 import { KeyArrowRightDirective } from "../directives/dm-key-arrow-right.directive";
 import { KeyArrowUpDirective } from "../directives/dm-key-arrow-up.directive";
 import { DMGameManagerService } from "../services/dm-game-manager.service";
-import {
-  dmConfigInitGameManager,
-  DMGameManagerHelper,
-} from "../helpers/dm-game-manager.helper";
+import { DMGameManagerHelper } from "../helpers/dm-game-manager.helper";
 import { DmGameUtilsPipe } from "../pipes/dm-game-utils.pipe";
+import {
+  DEFAULT_CONFIG,
+  DM_CONFIG_SERVICE,
+} from "../models/dm-game-manager.interface";
+import { provideConfig } from "../helpers/dm-game-manager-config.helper";
 
 @NgModule({
   declarations: [
@@ -31,12 +33,11 @@ import { DmGameUtilsPipe } from "../pipes/dm-game-utils.pipe";
   ],
   providers: [
     DMGameManagerService,
+    provideConfig(DEFAULT_CONFIG),
     {
       provide: APP_INITIALIZER,
-      // FIXME: On deps include Service y config?
-      deps: [dmConfigInitGameManager, DMGameManagerService],
+      deps: [DM_CONFIG_SERVICE],
       useFactory: DMGameManagerHelper,
-
       multi: true,
     },
   ],

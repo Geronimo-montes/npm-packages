@@ -1,17 +1,17 @@
 /** @format */
 
 import {
-  CanvasContextNotAvailableError,
-  GameManagerHelperNotAvailableError,
-  InvalidCanvasContext2DElementError,
-  InvalidCanvasElementError,
+    CanvasContextNotAvailableError,
+    GameManagerHelperNotAvailableError,
+    InvalidCanvasContext2DElementError,
+    InvalidCanvasElementError,
 } from "../errors/dm-render.exception";
-import DmGameManager from "../models/dm-game-manager.model";
+import { DMCanvasConfig } from "../models/dm-canvas-grid.interface";
+import { DMGameManageAPI } from "../models/dm-game-manager.interface";
 import {
-  DMCanvasElementRef,
-  DMObjRenderList,
-  DMPoint,
-  DMRenderFunc,
+    DMCanvasElementRef,
+    DMObjRenderList,
+    DMPoint,
 } from "../models/dm-render.interface";
 
 /**
@@ -20,10 +20,11 @@ import {
  * @param {DMCanvasElementRef} canvas - The canvas element to render onto.
  * @param {DMObjRenderList} objectRenderList - The list of objects to render.
  */
-export const DMRenderHelper: DMRenderFunc = (
+export function DMRenderHelper(
   canvas: DMCanvasElementRef,
-  gameManage: DmGameManager
-): void => {
+  gameManage: DMGameManageAPI,
+  canvasConfig: DMCanvasConfig
+): void {
   if (!gameManage) throw new GameManagerHelperNotAvailableError();
 
   if (!canvas) throw new InvalidCanvasElementError();
@@ -40,9 +41,8 @@ export const DMRenderHelper: DMRenderFunc = (
     throw new CanvasContextNotAvailableError();
   }
 
-  const { heightGrid, widthGrid, pixel } = gameManage.getRenderSettings();
-
-  ctx.clearRect(0, 0, widthGrid, heightGrid);
+  const { heightCanvas, widthCanvas, pixel } = canvasConfig;
+  ctx.clearRect(0, 0, heightCanvas, widthCanvas);
 
   const drawPoint = (point: DMPoint, color: string) => {
     ctx.fillStyle = color;
@@ -60,4 +60,4 @@ export const DMRenderHelper: DMRenderFunc = (
       drawPoint(point, color);
     });
   });
-};
+}

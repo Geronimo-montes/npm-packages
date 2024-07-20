@@ -179,3 +179,9 @@ dist
 dm-contextmenu/
 context-menu/
 .vscode/
+
+/projects/dm-faker-pro
+/projects/dm-custom-notifier
+/projects/dm-context-menu
+# /projects/test-app
+projects/dm-game-utils/src/docs/

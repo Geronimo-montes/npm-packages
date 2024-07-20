@@ -9,5 +9,7 @@ export class KeyArrowUpDirective {
   constructor() {}
 
   @HostListener("window:keydown.arrowup", ["$event"])
-  onKeyArrowUp($event: KeyboardEvent) {}
+  onKeyArrowUp($event: KeyboardEvent) {
+    this.dmKeyArrowUp.emit($event);
+  }
 }

@@ -1,4 +1,4 @@
-import { NgModule } from "@angular/core";
+import { APP_INITIALIZER, NgModule } from "@angular/core";
 
 import { CommonModule } from "@angular/common";
 import { BrowserModule } from "@angular/platform-browser";
@@ -10,8 +10,18 @@ import {
   contextMenu,
   contextMenuNotifications,
 } from "../../../dm-context-menu/src/public-api";
+import {
+  DMGameManagerHelper,
+  DmGameUtilsModule,
+  DEFAULT_CONFIG,
+} from "../../../dm-game-utils/src/public-api";
+import { DMGameManagerService } from "../../../dm-game-utils/src/lib/dm-game-utils/services/dm-game-manager.service";
 
-const TEST_MODULES: any[] = [DMContextMenuModule, DMNotificationModule];
+const TEST_MODULES: any[] = [
+  DMContextMenuModule,
+  DMNotificationModule,
+  DmGameUtilsModule,
+];
 
 @NgModule({
   imports: [BrowserModule, CommonModule, ...TEST_MODULES],

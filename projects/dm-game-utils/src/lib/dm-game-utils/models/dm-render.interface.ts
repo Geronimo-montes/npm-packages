@@ -1,3 +1,6 @@
+import { ElementRef } from "@angular/core";
+import { DMRenderHelper } from "../helpers/dm-render.helper";
+import { DMCanvasConfig } from "./dm-canvas-grid.interface";
 import DmGameManager from "./dm-game-manager.model";
 
 /**
@@ -6,6 +9,7 @@ import DmGameManager from "./dm-game-manager.model";
 export type DMCanvasElementRef =
   | HTMLCanvasElement
   | CanvasRenderingContext2D
+  | ElementRef
   | undefined;
 
 /**
@@ -14,19 +18,6 @@ export type DMCanvasElementRef =
 export interface DMPoint {
   x: number;
   y: number;
-}
-
-/**
- * Interface representing the global configuration for rendering on the canvas.
- */
-export interface DMGlobalConfigRender {
-  pixel: number;
-  heightGrid: number;
-  widthGrid: number;
-  canvasSize: number;
-  // skinDefault?: string;
-  // colorDefault?: string;
-  // render?: DMRenderFunc; // Render function custom, if not exists, use the default one
 }
 
 /**
@@ -63,15 +54,8 @@ export interface DMRenderInterface {
  * Se implementa unicamente en la el GameManager
  */
 export interface DMRenderSettingsInterface {
-  getRenderSettings(): DMGlobalConfigRender;
+  getRenderSettings(): DMCanvasConfig;
 }
-
-const renderAbs = (
-  canvas: DMCanvasElementRef,
-  gameManager: DmGameManager
-): DMObjRenderList => {
-  return [];
-};
 
 /**
  * Function responsible for rendering the game objects on the canvas.
@@ -79,4 +63,4 @@ const renderAbs = (
  * @param {DMCanvasElementRef} canvas - The canvas element to render onto.
  * @param {DmGameManager} SgameManager - The game manager helper.
  */
-export type DMRenderFunc = typeof renderAbs;
+export type DMRenderFunc = typeof DMRenderHelper;

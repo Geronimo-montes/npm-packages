@@ -13,13 +13,21 @@ export class DMCanvasGameComponent implements AfterViewInit {
   constructor(private gameManagerService: DMGameManagerService) {}
 
   ngOnInit(): void {
-    const config = this.gameManagerService.getCurrentConfig();
-    console.debug("Configuración actual del servicio:", config);
+    console.log(this.gameManagerService.getCurrentConfig());
   }
 
   ngAfterViewInit(): void {
     this.context2DCanvas = this.canvas.nativeElement.getContext("2d");
-    console.debug("Canvas Element is:", this.canvas);
-    console.debug("Context2DCanvas Element is:", this.context2DCanvas);
+    const { heightCanvas, widthCanvas } =
+      this.gameManagerService.getCanvasConfig();
+    this.canvas.nativeElement.width = heightCanvas;
+    this.canvas.nativeElement.height = widthCanvas;
+
+    this.gameManagerService.start(this.canvas.nativeElement.getContext("2d"));
+  }
+
+  heandle(event: any) {
+    this.gameManagerService.addBufferKey(event.key);
+    console.log(event.key);
   }
 }

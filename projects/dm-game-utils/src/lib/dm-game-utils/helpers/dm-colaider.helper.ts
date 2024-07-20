@@ -1,17 +1,22 @@
-import {
-  DMColliderFunc,
-  DMListColliderPoints,
-} from "../models/dm-colaider.interface";
-import DmGameManager from "../models/dm-game-manager.model";
+import { DMCanvasConfig } from "../models/dm-canvas-grid.interface";
+import { DMListColliderPoints } from "../models/dm-colaider.interface";
+import { DMGameManageAPI } from "../models/dm-game-manager.interface";
 import { DMPoint } from "../models/dm-render.interface";
 
-export const DmColaiderHelper: DMColliderFunc = (
-  game: DmGameManager
-): DMListColliderPoints => {
-  const { minX, maxX, minY, maxY } = game.getConfigCollision();
+export function DmColaiderHelper(
+  gameManage: DMGameManageAPI,
+  canvasConfig: DMCanvasConfig
+): DMListColliderPoints {
+  const { heightCanvas, widthCanvas, heightGrid, widthGrid, pixel } =
+    canvasConfig;
+
+  const minX = 0,
+    minY = 0,
+    maxX = widthGrid,
+    maxY = heightGrid;
   let colisiones: DMListColliderPoints = [];
 
-  game.detectCollisions().forEach((obj1, index, arr) => {
+  gameManage.detectCollisions().forEach((obj1, index, arr) => {
     obj1.points.forEach((point: DMPoint) => {
       if (
         point.x < minX ||
@@ -54,4 +59,4 @@ export const DmColaiderHelper: DMColliderFunc = (
   });
 
   return colisiones;
-};
+}

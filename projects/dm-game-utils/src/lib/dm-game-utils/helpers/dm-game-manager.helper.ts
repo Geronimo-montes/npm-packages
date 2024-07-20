@@ -1,81 +1,53 @@
 import {
-  DMConfigGameManager,
-  DMGameLogic,
+  DMGameManageAPI,
+  DMConfigGameManagerService,
 } from "../models/dm-game-manager.interface.js";
 import { DMGameManagerService } from "../services/dm-game-manager.service.js";
-import { DmColaiderHelper } from "./dm-colaider.helper.js";
-import DmGameManager from "../models/dm-game-manager.model.js";
-import { DMRenderHelper } from "./dm-render.helper.js";
-import { DMColliderInterface } from "../models/dm-colaider.interface.js";
-import {
-  DMRenderInterface,
-  DMRenderSettingsInterface,
-} from "../models/dm-render.interface.js";
 
 /**
  * Funcion inicializadora para el servicio DMGameManagerService.
  *
  * @param config
- * @param service
  * @returns
  */
 export const DMGameManagerHelper = (
-  config: DMConfigGameManager,
-  service: DMGameManagerService
-): (() => Promise<void>) => {
+  config: DMConfigGameManagerService
+): (() => Promise<any>) => {
   return () => {
-    const { colliderHelper, rendererHelper, listGameClass, renderSettings } =
-      config;
+    const service: DMGameManagerService = new DMGameManagerService();
 
-    const notValidInstancesList: boolean = listGameClass.some(
-      (value) => !isValidInstance(value)
-    );
-    if (notValidInstancesList)
-      throw new Error("Error en las intancias de GameLogi");
+    if (!config.mainClassGame)
+      throw new Error("No hay instancias de DMGameManageAPI");
 
-    const gameManager: DmGameManager = new DmGameManager(
-      listGameClass,
-      renderSettings
-    );
+    // if (!(config.mainClassGame instanceof DMGameManageAPI))
+    //   throw new Error("No hay instancias de DMGameManageAPI");
 
     return service.initialize({
-      gameManager,
-      renderSettings,
-      renderHelper: rendererHelper,
-      colliderHelper: colliderHelper,
+      canvasConfig: config.canvasConfig,
+      rendererHelper: config.rendererHelper,
+      colliderHelper: config.colliderHelper,
+      mainClassGame: config.mainClassGame,
     });
   };
 };
 
-export const dmConfigInitGameManager: DMConfigGameManager = {
-  rendererHelper: DMRenderHelper,
-  colliderHelper: DmColaiderHelper,
-  renderSettings: {
-    canvasSize: 50,
-    heightGrid: 50,
-    widthGrid: 50,
-    pixel: 10,
-  },
-  listGameClass: [],
-};
-
 /**
+ * @deprecated use isValidInstance instead
  *
  * @param obj
  * @returns
  */
-const isValidInstance = (
-  obj: any
-): obj is DMGameLogic &
-  DMRenderInterface &
-  DMRenderSettingsInterface &
-  DMColliderInterface => {
-  return (
-    obj instanceof DMGameLogic &&
-    typeof (obj as DMRenderInterface).render === "function" &&
-    typeof (obj as DMRenderSettingsInterface).getRenderSettings ===
-      "function" &&
-    typeof (obj as DMColliderInterface).getConfigCollision === "function" &&
-    typeof (obj as DMColliderInterface).detectCollisions === "function"
-  );
-};
+// const isValidInstance = (
+//   obj: any
+// ): obj is DMGameManageAPI &
+//   DMRenderInterface &
+//   DMRenderSettingsInterface &
+//   DMColliderInterface => {
+//   return (
+//     // obj instanceof DMGameManageAPI &&
+//     // typeof (obj as DMRenderInterface).render === "function" &&
+//     // typeof (obj as DMRenderSettingsInterface).getRenderSettings === "function" &&
+//     // typeof (obj as DMColliderInterface).getConfigCollision === "function" &&
+//     // typeof (obj as DMColliderInterface).detectCollisions === "function"
+//   );
+// };

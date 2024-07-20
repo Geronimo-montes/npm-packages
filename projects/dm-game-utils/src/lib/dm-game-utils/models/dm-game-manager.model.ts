@@ -1,31 +1,34 @@
+import { DMCanvasConfig } from "./dm-canvas-grid.interface";
 import {
   DMColliderInterface,
   DMConfigCollision,
   DMListObjects,
 } from "./dm-colaider.interface";
-import { DMGameLogic, DMGameLogicList } from "./dm-game-manager.interface";
+import { DMGameManageAPI } from "./dm-game-manager.interface";
 import {
-  DMGlobalConfigRender,
   DMObjRenderList,
   DMRenderInterface,
   DMRenderSettingsInterface,
 } from "./dm-render.interface";
 
+/**
+ * @deprecated use DMGameManageAPI instead
+ */
 export default class DmGameManager
   implements DMRenderSettingsInterface, DMRenderInterface, DMColliderInterface
 {
   constructor(
-    gameLogicIntancesList: DMGameLogicList,
-    renderSettings: DMGlobalConfigRender
+    gameLogicIntancesList: DMGameManageAPI,
+    renderSettings: DMCanvasConfig
   ) {
-    this.gameLogicIntancesList = gameLogicIntancesList;
+    this.gameLogicInstances = gameLogicIntancesList;
     this.renderSettings = renderSettings;
   }
 
   public detectCollisions(): DMListObjects {
-    return this.gameLogicIntancesList
-      .map((value) => (<DMColliderInterface>value).detectCollisions())
-      .flat(1);
+    return this.gameLogicInstances.detectCollisions();
+    //   .map((value) => (<DMColliderInterface>value).detectCollisions())
+    //   .flat(1);
   }
 
   public getConfigCollision(): DMConfigCollision {
@@ -38,17 +41,28 @@ export default class DmGameManager
   }
 
   public render(): DMObjRenderList {
-    return this.gameLogicIntancesList
-      .map((value) => (<DMRenderInterface>value).render())
-      .flat(1);
+    return this.gameLogicInstances.render();
+    //   .map((value) => (<DMRenderInterface>value).render())
+    //   .flat(1);
   }
 
-  public getRenderSettings(): DMGlobalConfigRender {
+  public getRenderSettings(): DMCanvasConfig {
     return this.renderSettings;
   }
 
-  public loop() {}
+  public loop() {
+    return this.gameLogicInstances.loop();
+    // .forEach((value) =>
+    //   (<DmGameManagerInterface>value).loop()
+    // );
+  }
+  public senKey(key: string) {
+    this.gameLogicInstances.setKey(key);
+    // .forEach((value) =>
+    //   (<DmGameManagerInterface>value).setKey(key)
+    // );
+  }
 
-  private gameLogicIntancesList: DMGameLogicList;
-  private renderSettings: DMGlobalConfigRender;
+  private gameLogicInstances: DMGameManageAPI;
+  private renderSettings: DMCanvasConfig;
 }
