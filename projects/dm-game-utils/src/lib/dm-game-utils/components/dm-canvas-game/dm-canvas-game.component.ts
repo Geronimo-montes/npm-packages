@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostListener,
+  ViewChild,
+} from "@angular/core";
 import { DMGameManagerService } from "../../services/dm-game-manager.service";
 
 @Component({
@@ -12,22 +18,26 @@ export class DMCanvasGameComponent implements AfterViewInit {
 
   constructor(private gameManagerService: DMGameManagerService) {}
 
-  ngOnInit(): void {
-    console.log(this.gameManagerService.getCurrentConfig());
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     this.context2DCanvas = this.canvas.nativeElement.getContext("2d");
-    const { heightCanvas, widthCanvas } =
+    const { heightCanvas, widthCanvas, heightGrid, pixel, widthGrid } =
       this.gameManagerService.getCanvasConfig();
-    this.canvas.nativeElement.width = heightCanvas;
-    this.canvas.nativeElement.height = widthCanvas;
+
+    this.canvas.nativeElement.height = heightGrid * pixel; // window.innerHeight * 0.95;
+    this.canvas.nativeElement.width = widthGrid * pixel; //window.innerWidth * 0.95;
 
     this.gameManagerService.start(this.canvas.nativeElement.getContext("2d"));
   }
 
   heandle(event: any) {
     this.gameManagerService.addBufferKey(event.key);
-    console.log(event.key);
+  }
+
+  @HostListener("window:resize", ["$event"])
+  onResize(event: Event) {
+    this.canvas.nativeElement.width = window.innerWidth * 0.95;
+    this.canvas.nativeElement.height = window.innerHeight * 0.95;
   }
 }

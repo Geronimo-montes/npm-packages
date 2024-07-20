@@ -1,7 +1,4 @@
-import {
-  DMGameManageAPI,
-  DMConfigGameManagerService,
-} from "../models/dm-game-manager.interface.js";
+import { DMConfigGameManagerService } from "../models/dm-game-manager.interface.js";
 import { DMGameManagerService } from "../services/dm-game-manager.service.js";
 
 /**
@@ -12,23 +9,23 @@ import { DMGameManagerService } from "../services/dm-game-manager.service.js";
  */
 export const DMGameManagerHelper = (
   config: DMConfigGameManagerService
-): (() => Promise<any>) => {
-  return () => {
-    const service: DMGameManagerService = new DMGameManagerService();
+): any => {
+  const service: DMGameManagerService = new DMGameManagerService();
 
-    if (!config.mainClassGame)
-      throw new Error("No hay instancias de DMGameManageAPI");
+  if (!config.mainClassGame)
+    throw new Error("No hay instancias de DMGameManageAPI");
 
-    // if (!(config.mainClassGame instanceof DMGameManageAPI))
-    //   throw new Error("No hay instancias de DMGameManageAPI");
+  // if (!(config.mainClassGame instanceof DMGameManagerAPI))
+  //   throw new Error("No hay instancias de DMGameManageAPI");
 
-    return service.initialize({
-      canvasConfig: config.canvasConfig,
-      rendererHelper: config.rendererHelper,
-      colliderHelper: config.colliderHelper,
-      mainClassGame: config.mainClassGame,
-    });
-  };
+  service.initialize({
+    canvasConfig: config.canvasConfig,
+    rendererHelper: config.rendererHelper,
+    colliderHelper: config.colliderHelper,
+    mainClassGame: config.mainClassGame,
+  });
+
+  return service;
 };
 
 /**

@@ -1,4 +1,6 @@
+import { DMCanvasConfig } from "../../models/dm-canvas-grid.interface";
 import {
+  DMCollisionResult,
   DMConfigCollision,
   DMListObjects,
 } from "../../models/dm-colaider.interface";
@@ -6,9 +8,29 @@ import { DMGameManageAPI } from "../../models/dm-game-manager.interface";
 import { KeyboardKey } from "../../models/dm-key.interface";
 import { DMObjRenderList, DMPoint } from "../../models/dm-render.interface";
 
+export const SnakeMainGameHelper = (
+  canvasConfig: DMCanvasConfig
+): DMGameManageAPI => {
+  return new SnakeMainGame(canvasConfig);
+};
+
 export class SnakeMainGame implements DMGameManageAPI {
-  private snake: Snake = new Snake();
-  constructor() {}
+  private snake: Snake = {} as Snake;
+  private point: FootPoint = {} as FootPoint;
+
+  constructor(canvasConfig: DMCanvasConfig) {
+    this.canvasConfig = canvasConfig;
+    this.snake = new Snake();
+    this.point = new FootPoint(this.canvasConfig);
+  }
+
+  private _canvasConfig: DMCanvasConfig = {} as DMCanvasConfig;
+  public get canvasConfig(): DMCanvasConfig {
+    return this._canvasConfig;
+  }
+  public set canvasConfig(value: DMCanvasConfig) {
+    this._canvasConfig = value;
+  }
 
   inputHandler(key: string): void {}
 
@@ -28,16 +50,41 @@ export class SnakeMainGame implements DMGameManageAPI {
   render(): DMObjRenderList {
     return <DMObjRenderList>[
       { object: this.snake, configRender: this.snake.getRenderSettings() },
+      { object: this.point, configRender: this.point.getRenderSettings() },
     ];
   }
+
   detectCollisions(): DMListObjects {
     return <DMListObjects>[
-      { object: this, points: this.snake.points.slice(1) },
-      { object: this, points: [this.snake.points[0]] },
+      { object: this.snake, points: this.snake.points.slice(1) },
+      { object: this.snake, points: [this.snake.points[0]] },
+      { object: this.point, points: [this.point.getFootPoint()] },
     ];
   }
   getConfigCollision(): DMConfigCollision {
     throw new Error("Method not implemented.");
+  }
+
+  /**
+   * Validates the detected collisions.
+   *
+   * @param collisions List of collision results.
+   * @returns `true` if the collisions are valid, `false` otherwise.
+   */
+  public validateCollisions(collisions: DMCollisionResult[]): boolean {
+    collisions.forEach((collision: DMCollisionResult) => {
+      const { impactPoint, impactTime, objectA, objectB } = collision;
+      if (
+        (objectA.object instanceof Snake &&
+          objectB.object instanceof FootPoint) ||
+        (objectB.object instanceof Snake && objectA.object instanceof FootPoint)
+      ) {
+        this.snake.comer(impactPoint);
+        this.point.newPoint(this.canvasConfig);
+      }
+    });
+
+    return true;
   }
 }
 
@@ -133,4 +180,29 @@ export class Snake {
   }
 
   // override
+}
+
+export class FootPoint {
+  constructor(canvasConfig: DMCanvasConfig) {
+    this.newPoint(canvasConfig);
+  }
+
+  newPoint({ heightGrid, widthGrid }: DMCanvasConfig) {
+    this.point = {
+      x: Math.abs(Math.floor(Math.random() * heightGrid - 1)),
+      y: Math.abs(Math.floor(Math.random() * widthGrid - 1)),
+    };
+  }
+
+  getFootPoint(): DMPoint {
+    return this.point;
+  }
+
+  getRenderSettings() {
+    return {
+      color: "yellow",
+      points: [this.point],
+    };
+  }
+  private point: DMPoint = {} as DMPoint;
 }

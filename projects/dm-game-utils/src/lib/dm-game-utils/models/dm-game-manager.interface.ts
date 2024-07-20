@@ -1,10 +1,11 @@
 import { InjectionToken } from "@angular/core";
-import { SnakeMainGame } from "../games/snake/snake.model";
+import { SnakeMainGame, SnakeMainGameHelper } from "../games/snake/snake.model";
 import { DmColaiderHelper } from "../helpers/dm-colaider.helper";
 import { DMRenderHelper } from "../helpers/dm-render.helper";
 import { DMCanvasConfig } from "./dm-canvas-grid.interface";
 import {
   DMColliderFunc,
+  DMCollisionResult,
   DMConfigCollision,
   DMListObjects,
 } from "./dm-colaider.interface";
@@ -56,6 +57,7 @@ export interface DMGameManageAPI {
    * @returns {DMConfigCollision} - La configuración de colisiones.
    */
   getConfigCollision(): DMConfigCollision;
+  validateCollisions(collisions: DMCollisionResult[]): boolean;
 }
 
 // export class DMGameManagerAPI implements DMGameManageInterface {
@@ -83,7 +85,7 @@ export interface DMConfigGameManagerService {
   rendererHelper: DMRenderFunc;
   colliderHelper: DMColliderFunc;
   canvasConfig: DMCanvasConfig;
-  mainClassGame: DMGameManageAPI;
+  mainClassGame: (canvasConfig: DMCanvasConfig) => DMGameManageAPI;
 }
 
 export const DEFAULT_CONFIG: DMConfigGameManagerService = {
@@ -96,8 +98,8 @@ export const DEFAULT_CONFIG: DMConfigGameManagerService = {
     widthGrid: 50,
     pixel: 10,
   },
-  mainClassGame: new SnakeMainGame(),
+  mainClassGame: SnakeMainGameHelper,
 };
 
-export const DM_CONFIG_SERVICE: InjectionToken<DMConfigGameManagerService> =
-  new InjectionToken<DMConfigGameManagerService>("DM_CONFIG_SERVICE");
+export const CONFIG_TOKEN: InjectionToken<DMConfigGameManagerService> =
+  new InjectionToken<DMConfigGameManagerService>("CONFIG_TOKEN");

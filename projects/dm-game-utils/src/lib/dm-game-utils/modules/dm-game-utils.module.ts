@@ -8,8 +8,8 @@ import { DMGameManagerService } from "../services/dm-game-manager.service";
 import { DMGameManagerHelper } from "../helpers/dm-game-manager.helper";
 import { DmGameUtilsPipe } from "../pipes/dm-game-utils.pipe";
 import {
+  CONFIG_TOKEN,
   DEFAULT_CONFIG,
-  DM_CONFIG_SERVICE,
 } from "../models/dm-game-manager.interface";
 import { provideConfig } from "../helpers/dm-game-manager-config.helper";
 
@@ -35,10 +35,9 @@ import { provideConfig } from "../helpers/dm-game-manager-config.helper";
     DMGameManagerService,
     provideConfig(DEFAULT_CONFIG),
     {
-      provide: APP_INITIALIZER,
-      deps: [DM_CONFIG_SERVICE],
+      provide: DMGameManagerService,
       useFactory: DMGameManagerHelper,
-      multi: true,
+      deps: [CONFIG_TOKEN],
     },
   ],
 })

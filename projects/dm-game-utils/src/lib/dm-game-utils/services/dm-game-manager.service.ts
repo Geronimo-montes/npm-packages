@@ -1,18 +1,16 @@
 import { Injectable } from "@angular/core";
 import { interval, map, takeWhile, tap } from "rxjs";
+import { DMCanvasConfig } from "../models/dm-canvas-grid.interface";
 import {
   DMColliderFunc,
   DMCollisionResult,
 } from "../models/dm-colaider.interface";
 import {
-  DEFAULT_CONFIG,
   DMConfigGameManagerService,
   DMGameManageAPI,
 } from "../models/dm-game-manager.interface";
 import { KeyboardKey } from "../models/dm-key.interface";
 import { DMObjRenderList, DMRenderFunc } from "../models/dm-render.interface";
-import DmGameManager from "../models/dm-game-manager.model";
-import { DMCanvasConfig } from "../models/dm-canvas-grid.interface";
 
 /**
  * To inject the configuration into the service, it must be specified in the module.
@@ -38,12 +36,15 @@ export class DMGameManagerService {
   private canvasConfig!: DMCanvasConfig;
   private rendererHelper!: DMRenderFunc;
   private colliderHelper!: DMColliderFunc;
-  private config: DMConfigGameManagerService = {} as DMConfigGameManagerService;
+  private config!: DMConfigGameManagerService;
   private loop = interval(100);
   bufferKey: KeyboardKey[] = [];
 
   constructor() {
-    this.initialize(DEFAULT_CONFIG);
+    this.mainClassGame = this.mainClassGame;
+    this.canvasConfig = this.canvasConfig;
+    this.rendererHelper = this.rendererHelper;
+    this.colliderHelper = this.colliderHelper;
   }
 
   /**
@@ -58,11 +59,11 @@ export class DMGameManagerService {
           this.mainClassGame.setKey(<string>this.getKey());
           return this.colliderHelper(this.mainClassGame, this.canvasConfig);
         }),
+        takeWhile((collisions) => this.validateCollisions(collisions)),
+        tap(() => this.mainClassGame.loop()),
         tap(() =>
           this.rendererHelper(canvas, this.mainClassGame, this.canvasConfig)
-        ),
-        takeWhile((collisions) => this.validateCollisions(collisions)),
-        tap(() => this.mainClassGame.loop())
+        )
       )
       .subscribe(() => {});
   }
@@ -84,21 +85,12 @@ export class DMGameManagerService {
    * @param config The configuration needed to initialize the service.
    * @returns A promise that resolves when the service has been initialized.
    */
-  initialize(config: DMConfigGameManagerService): Promise<void> {
-    return new Promise((resolve) => {
-      console.log({
-        CurrentConfig: this.config,
-        NewConfig: config,
-      });
-
-      this.mainClassGame = config.mainClassGame;
-      this.canvasConfig = config.canvasConfig;
-      this.rendererHelper = config.rendererHelper;
-      this.colliderHelper = config.colliderHelper;
-
-      this.config = config;
-      resolve();
-    });
+  initialize(config: DMConfigGameManagerService): void {
+    this.mainClassGame = config.mainClassGame(config.canvasConfig);
+    this.canvasConfig = config.canvasConfig;
+    this.rendererHelper = config.rendererHelper;
+    this.colliderHelper = config.colliderHelper;
+    this.config = config;
   }
 
   /**
@@ -127,6 +119,8 @@ export class DMGameManagerService {
    */
   validateCollisions(collisions: DMCollisionResult[]): boolean {
     // TODO: Add global property for helper validator state collisions
+    this.mainClassGame.validateCollisions(collisions);
+    if (collisions.length > 0) console.log(collisions);
     return true;
   }
   /**
