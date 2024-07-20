@@ -1,7 +1,4 @@
 import { InjectionToken } from "@angular/core";
-import { SnakeMainGame, SnakeMainGameHelper } from "../games/snake/snake.model";
-import { DmColaiderHelper } from "../helpers/dm-colaider.helper";
-import { DMRenderHelper } from "../helpers/dm-render.helper";
 import { DMCanvasConfig } from "./dm-canvas-grid.interface";
 import {
   DMColliderFunc,
@@ -10,6 +7,7 @@ import {
   DMListObjects,
 } from "./dm-colaider.interface";
 import { DMObjRenderList, DMRenderFunc } from "./dm-render.interface";
+
 /**
  * Interfaz DMGameLogic
  *
@@ -60,46 +58,12 @@ export interface DMGameManageAPI {
   validateCollisions(collisions: DMCollisionResult[]): boolean;
 }
 
-// export class DMGameManagerAPI implements DMGameManageInterface {
-//   public inputHandler(key: string): void {
-//     throw new Error("Method not implemented.");
-//   }
-//   public setKey(key: string): void {
-//     throw new Error("Method not implemented.");
-//   }
-//   public loop(): void {
-//     throw new Error("Method not implemented.");
-//   }
-//   public render(): DMObjRenderList {
-//     throw new Error("Method not implemented.");
-//   }
-//   public detectCollisions(): DMListObjects {
-//     throw new Error("Method not implemented.");
-//   }
-//   public getConfigCollision(): DMConfigCollision {
-//     throw new Error("Method not implemented.");
-//   }
-// }
-
 export interface DMConfigGameManagerService {
   rendererHelper: DMRenderFunc;
   colliderHelper: DMColliderFunc;
   canvasConfig: DMCanvasConfig;
   mainClassGame: (canvasConfig: DMCanvasConfig) => DMGameManageAPI;
 }
-
-export const DEFAULT_CONFIG: DMConfigGameManagerService = {
-  rendererHelper: DMRenderHelper,
-  colliderHelper: DmColaiderHelper,
-  canvasConfig: {
-    heightCanvas: 600,
-    widthCanvas: 800,
-    heightGrid: 50,
-    widthGrid: 50,
-    pixel: 10,
-  },
-  mainClassGame: SnakeMainGameHelper,
-};
 
 export const CONFIG_TOKEN: InjectionToken<DMConfigGameManagerService> =
   new InjectionToken<DMConfigGameManagerService>("CONFIG_TOKEN");

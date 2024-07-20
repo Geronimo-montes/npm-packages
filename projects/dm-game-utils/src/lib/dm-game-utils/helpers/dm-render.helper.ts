@@ -1,17 +1,17 @@
 /** @format */
 
 import {
-    CanvasContextNotAvailableError,
-    GameManagerHelperNotAvailableError,
-    InvalidCanvasContext2DElementError,
-    InvalidCanvasElementError,
+  CanvasContextNotAvailableError,
+  GameManagerHelperNotAvailableError,
+  InvalidCanvasContext2DElementError,
+  InvalidCanvasElementError,
 } from "../errors/dm-render.exception";
 import { DMCanvasConfig } from "../models/dm-canvas-grid.interface";
 import { DMGameManageAPI } from "../models/dm-game-manager.interface";
 import {
-    DMCanvasElementRef,
-    DMObjRenderList,
-    DMPoint,
+  DMCanvasElementRef,
+  DMObjRenderList,
+  DMPoint,
 } from "../models/dm-render.interface";
 
 /**
@@ -41,8 +41,9 @@ export function DMRenderHelper(
     throw new CanvasContextNotAvailableError();
   }
 
-  const { heightCanvas, widthCanvas, pixel } = canvasConfig;
-  ctx.clearRect(0, 0, heightCanvas, widthCanvas);
+  const { heightCanvas, widthCanvas, pixel, heightGrid, widthGrid } =
+    canvasConfig;
+  ctx.clearRect(0, 0, (widthGrid + 1) * pixel, (heightGrid + 1) * pixel);
 
   const drawPoint = (point: DMPoint, color: string) => {
     ctx.fillStyle = color;

@@ -60,12 +60,14 @@ export class DMGameManagerService {
           return this.colliderHelper(this.mainClassGame, this.canvasConfig);
         }),
         takeWhile((collisions) => this.validateCollisions(collisions)),
-        tap(() => this.mainClassGame.loop()),
         tap(() =>
           this.rendererHelper(canvas, this.mainClassGame, this.canvasConfig)
-        )
+        ),
+        tap(() => this.mainClassGame.loop()),
       )
-      .subscribe(() => {});
+      .subscribe(() => {
+        console.count("loop");
+      });
   }
 
   addBufferKey(key: string) {
@@ -86,11 +88,33 @@ export class DMGameManagerService {
    * @returns A promise that resolves when the service has been initialized.
    */
   initialize(config: DMConfigGameManagerService): void {
-    this.mainClassGame = config.mainClassGame(config.canvasConfig);
-    this.canvasConfig = config.canvasConfig;
-    this.rendererHelper = config.rendererHelper;
-    this.colliderHelper = config.colliderHelper;
+    console.log("Initializing service with configuration:", config);
+    this.mainClassGame =
+      typeof config.mainClassGame === "function"
+        ? config.mainClassGame(config.canvasConfig)
+        : (this.mainClassGame = config.mainClassGame);
+    console.log("mainClassGame:", this.mainClassGame);
+
+    if (this.canvasConfig !== config.canvasConfig) {
+      console.log("Updating canvasConfig");
+      if (this.canvasConfig !== config.canvasConfig)
+        this.canvasConfig = config.canvasConfig;
+    }
+
+    if (this.rendererHelper !== config.rendererHelper) {
+      console.log("Updating rendererHelper");
+      if (this.rendererHelper !== config.rendererHelper)
+        this.rendererHelper = config.rendererHelper;
+    }
+
+    if (this.colliderHelper !== config.colliderHelper) {
+      console.log("Updating colliderHelper");
+      if (this.colliderHelper !== config.colliderHelper)
+        this.colliderHelper = config.colliderHelper;
+    }
+
     this.config = config;
+    console.log("config:", this.config);
   }
 
   /**
@@ -119,9 +143,7 @@ export class DMGameManagerService {
    */
   validateCollisions(collisions: DMCollisionResult[]): boolean {
     // TODO: Add global property for helper validator state collisions
-    this.mainClassGame.validateCollisions(collisions);
-    if (collisions.length > 0) console.log(collisions);
-    return true;
+    return this.mainClassGame.validateCollisions(collisions);
   }
   /**
    * Retrieves the canvas configuration.

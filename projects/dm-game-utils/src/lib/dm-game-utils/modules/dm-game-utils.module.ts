@@ -7,11 +7,9 @@ import { KeyArrowUpDirective } from "../directives/dm-key-arrow-up.directive";
 import { DMGameManagerService } from "../services/dm-game-manager.service";
 import { DMGameManagerHelper } from "../helpers/dm-game-manager.helper";
 import { DmGameUtilsPipe } from "../pipes/dm-game-utils.pipe";
-import {
-  CONFIG_TOKEN,
-  DEFAULT_CONFIG,
-} from "../models/dm-game-manager.interface";
+import { CONFIG_TOKEN } from "../models/dm-game-manager.interface";
 import { provideConfig } from "../helpers/dm-game-manager-config.helper";
+import { DEFAULT_CONFIG } from "../models/dm-default-game-manager";
 
 @NgModule({
   declarations: [

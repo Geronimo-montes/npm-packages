@@ -21,23 +21,29 @@ export class DMCanvasGameComponent implements AfterViewInit {
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
+    console.log("DMCanvasGameComponent ngAfterViewInit() - Start");
     this.context2DCanvas = this.canvas.nativeElement.getContext("2d");
-    const { heightCanvas, widthCanvas, heightGrid, pixel, widthGrid } =
+    const { heightCanvas, widthCanvas } =
       this.gameManagerService.getCanvasConfig();
 
-    this.canvas.nativeElement.height = heightGrid * pixel; // window.innerHeight * 0.95;
-    this.canvas.nativeElement.width = widthGrid * pixel; //window.innerWidth * 0.95;
+    this.context2DCanvas.canvas.height = heightCanvas; // heightGrid * pixel; // window.innerHeight * 0.95;
+    this.context2DCanvas.canvas.width = widthCanvas; //widthGrid * pixel; //window.innerWidth * 0.95;
 
-    this.gameManagerService.start(this.canvas.nativeElement.getContext("2d"));
+    this.gameManagerService.start(this.context2DCanvas);
   }
 
   heandle(event: any) {
     this.gameManagerService.addBufferKey(event.key);
   }
 
-  @HostListener("window:resize", ["$event"])
-  onResize(event: Event) {
-    this.canvas.nativeElement.width = window.innerWidth * 0.95;
-    this.canvas.nativeElement.height = window.innerHeight * 0.95;
-  }
+  //   @HostListener("window:resize", ["$event"])
+  //   onResize(event: Event) {
+  //     this.canvas.nativeElement.width = window.innerWidth * 0.95;
+  //     this.canvas.nativeElement.height = window.innerHeight * 0.95;
+
+  //     let config = this.gameManagerService.getCurrentConfig();
+  //     config.canvasConfig.heightCanvas = this.canvas.nativeElement.height;
+  //     config.canvasConfig.widthCanvas = this.canvas.nativeElement.width;
+  //     this.gameManagerService.initialize;
+  //   }
 }

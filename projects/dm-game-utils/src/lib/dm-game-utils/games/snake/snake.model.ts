@@ -17,11 +17,13 @@ export const SnakeMainGameHelper = (
 export class SnakeMainGame implements DMGameManageAPI {
   private snake: Snake = {} as Snake;
   private point: FootPoint = {} as FootPoint;
+  private wall: Wall = {} as Wall;
 
   constructor(canvasConfig: DMCanvasConfig) {
     this.canvasConfig = canvasConfig;
     this.snake = new Snake();
     this.point = new FootPoint(this.canvasConfig);
+    this.wall = new Wall(this.canvasConfig);
   }
 
   private _canvasConfig: DMCanvasConfig = {} as DMCanvasConfig;
@@ -59,6 +61,7 @@ export class SnakeMainGame implements DMGameManageAPI {
       { object: this.snake, points: this.snake.points.slice(1) },
       { object: this.snake, points: [this.snake.points[0]] },
       { object: this.point, points: [this.point.getFootPoint()] },
+      { object: this.wall, points: this.wall.points },
     ];
   }
   getConfigCollision(): DMConfigCollision {
@@ -72,8 +75,9 @@ export class SnakeMainGame implements DMGameManageAPI {
    * @returns `true` if the collisions are valid, `false` otherwise.
    */
   public validateCollisions(collisions: DMCollisionResult[]): boolean {
-    collisions.forEach((collision: DMCollisionResult) => {
-      const { impactPoint, impactTime, objectA, objectB } = collision;
+    for (let index = 0; index < collisions.length; index++) {
+      const { impactPoint, objectA, objectB } = collisions[index];
+      // Collision between snake and food: EAT POINT
       if (
         (objectA.object instanceof Snake &&
           objectB.object instanceof FootPoint) ||
@@ -81,11 +85,41 @@ export class SnakeMainGame implements DMGameManageAPI {
       ) {
         this.snake.comer(impactPoint);
         this.point.newPoint(this.canvasConfig);
+        return true;
       }
-    });
 
+      // Collision between snake and itself: GAME OVER
+      if (objectA.object instanceof Snake && objectB.object instanceof Snake) {
+        return false;
+      } // Collision between snake and wall: GAME OVER
+      if (
+        (objectA.object instanceof Snake && objectB.object instanceof Wall) ||
+        (objectB.object instanceof Snake && objectA.object instanceof Wall)
+      ) {
+        return false;
+      }
+    }
     return true;
   }
+}
+
+export class Wall {
+  constructor(canvasConfig: DMCanvasConfig) {
+    this.points = [
+      ...Array.from({ length: canvasConfig.widthGrid }, (_, i) => [
+        <DMPoint>{ x: i, y: 0 },
+        <DMPoint>{ x: i, y: canvasConfig.heightGrid },
+      ]).flat(1),
+      ...Array.from({ length: canvasConfig.heightGrid }, (_, i) => [
+        <DMPoint>{ x: 0, y: i },
+        <DMPoint>{ x: canvasConfig.widthGrid, y: i },
+      ]).flat(1),
+    ];
+
+    console.log(this.points);
+  }
+
+  public points: DMPoint[] = [];
 }
 
 export interface SnakeModel {
@@ -189,9 +223,10 @@ export class FootPoint {
 
   newPoint({ heightGrid, widthGrid }: DMCanvasConfig) {
     this.point = {
-      x: Math.abs(Math.floor(Math.random() * heightGrid - 1)),
-      y: Math.abs(Math.floor(Math.random() * widthGrid - 1)),
+      x: Math.abs(Math.floor(Math.random() * heightGrid)),
+      y: Math.abs(Math.floor(Math.random() * widthGrid)),
     };
+    console.log(this.point);
   }
 
   getFootPoint(): DMPoint {

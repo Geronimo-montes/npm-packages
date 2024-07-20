@@ -20,24 +20,24 @@ export function DmColaiderHelper(
   for (let index = 0; index < items.length; index++) {
     const obj1 = items[index];
 
-    obj1.points.forEach((point: DMPoint) => {
-      if (
-        point.x <= minY ||
-        point.x >= maxY ||
-        point.y <= minX ||
-        point.y >= maxX
-      ) {
-        let obj1Colision = colisiones.find((c) => Object.is(c, obj1));
-        if (!obj1Colision) {
-          colisiones.push({
-            objectB: obj1,
-            objectA: { grid: "limites" },
-            impactPoint: { x: point.x, y: point.y },
-            impactTime: new Date().getTime(),
-          });
-        }
-      }
-    });
+    // obj1.points.forEach((point: DMPoint) => {
+    //   if (
+    //     point.x < minX ||
+    //     point.x > maxX ||
+    //     point.y < minY ||
+    //     point.y > maxY
+    //   ) {
+    //     let obj1Colision = colisiones.find((c) => Object.is(c, obj1));
+    //     if (!obj1Colision) {
+    //       colisiones.push({
+    //         objectB: obj1,
+    //         objectA: ,
+    //         impactPoint: { x: point.x, y: point.y },
+    //         impactTime: new Date().getTime(),
+    //       });
+    //     }
+    //   }
+    // });
 
     for (let _index2 = index + 1; _index2 < items.length; _index2++) {
       const obj2 = items[_index2];
