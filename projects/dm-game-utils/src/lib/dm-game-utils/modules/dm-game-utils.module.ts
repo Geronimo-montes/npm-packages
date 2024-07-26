@@ -10,6 +10,7 @@ import { DmGameUtilsPipe } from "../pipes/dm-game-utils.pipe";
 import { CONFIG_TOKEN } from "../models/dm-game-manager.interface";
 import { provideConfig } from "../helpers/dm-game-manager-config.helper";
 import { DEFAULT_CONFIG } from "../models/dm-default-game-manager";
+import { KeySpaceDirective } from "../directives/dm-key-space.directive";
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { DEFAULT_CONFIG } from "../models/dm-default-game-manager";
     KeyArrowRightDirective,
     KeyArrowUpDirective,
     KeyArrowDownDirective,
+    KeySpaceDirective,
     DmGameUtilsPipe,
   ],
   imports: [],
@@ -27,6 +29,7 @@ import { DEFAULT_CONFIG } from "../models/dm-default-game-manager";
     KeyArrowRightDirective,
     KeyArrowUpDirective,
     KeyArrowDownDirective,
+    KeySpaceDirective,
     DmGameUtilsPipe,
   ],
   providers: [

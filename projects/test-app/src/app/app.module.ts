@@ -38,6 +38,7 @@ const TEST_MODULES: any[] = [
       useFactory: DMGameManagerHelper,
       deps: [CONFIG_TOKEN],
     },
+
     DMContextMenuService,
     { provide: "CONTEXT_MENU_CONFIG", useValue: contextMenuNotifications },
   ],

@@ -59,14 +59,14 @@ export class DMGameManagerService {
           this.mainClassGame.setKey(<string>this.getKey());
           return this.colliderHelper(this.mainClassGame, this.canvasConfig);
         }),
-        takeWhile((collisions) => this.validateCollisions(collisions)),
         tap(() =>
           this.rendererHelper(canvas, this.mainClassGame, this.canvasConfig)
         ),
-        tap(() => this.mainClassGame.loop()),
+        takeWhile((collisions) => this.validateCollisions(collisions)),
+        tap(() => this.mainClassGame.loop())
       )
       .subscribe(() => {
-        console.count("loop");
+        // console.count("loop");
       });
   }
 
@@ -80,6 +80,9 @@ export class DMGameManagerService {
     return key;
   }
 
+  getMarcador(): number {
+    return this.mainClassGame.getMarcador();
+  }
   /**
    * Initializes the service.
    * This method should be called from the component once it has fully loaded.

@@ -25,6 +25,9 @@ export class SnakeMainGame implements DMGameManageAPI {
     this.point = new FootPoint(this.canvasConfig);
     this.wall = new Wall(this.canvasConfig);
   }
+  getMarcador(): number {
+    return this.snake.points.length;
+  }
 
   private _canvasConfig: DMCanvasConfig = {} as DMCanvasConfig;
   public get canvasConfig(): DMCanvasConfig {
@@ -33,6 +36,9 @@ export class SnakeMainGame implements DMGameManageAPI {
   public set canvasConfig(value: DMCanvasConfig) {
     this._canvasConfig = value;
   }
+
+  //   getMarcador(): number {
+  //   }
 
   inputHandler(key: string): void {}
 
@@ -58,10 +64,26 @@ export class SnakeMainGame implements DMGameManageAPI {
 
   detectCollisions(): DMListObjects {
     return <DMListObjects>[
-      { object: this.snake, points: this.snake.points.slice(1) },
-      { object: this.snake, points: [this.snake.points[0]] },
-      { object: this.point, points: [this.point.getFootPoint()] },
-      { object: this.wall, points: this.wall.points },
+      {
+        name: this.snake.getName(),
+        object: this.snake,
+        points: this.snake.points.slice(1),
+      },
+      {
+        name: this.snake.getName(),
+        object: this.snake,
+        points: [this.snake.points[0]],
+      },
+      {
+        name: this.point.getName(),
+        object: this.point,
+        points: [this.point.getFootPoint()],
+      },
+      {
+        name: this.wall.getName(),
+        object: this.wall,
+        points: this.wall.points,
+      },
     ];
   }
   getConfigCollision(): DMConfigCollision {
@@ -104,6 +126,9 @@ export class SnakeMainGame implements DMGameManageAPI {
 }
 
 export class Wall {
+  getName(): string {
+    return "wall";
+  }
   constructor(canvasConfig: DMCanvasConfig) {
     this.points = [
       ...Array.from({ length: canvasConfig.widthGrid }, (_, i) => [
@@ -119,28 +144,34 @@ export class Wall {
     console.log(this.points);
   }
 
+  getRenderSettings() {
+    return {
+      color: "grown",
+      points: this.points,
+    };
+  }
+
   public points: DMPoint[] = [];
 }
 
-export interface SnakeModel {
-  points: DMPoint[];
-  direction: KeyboardKey;
-  speed: number;
-}
-
 export class Snake {
-  constructor(
-    protected _points: DMPoint[] = [
+  getName(): string {
+    return "snake";
+  }
+  private _points: DMPoint[] = [];
+  private _speed: number = 1;
+  private _direction: KeyboardKey = KeyboardKey.ArrowDown;
+
+  constructor() {
+    this._points = [
       { x: 10, y: 15 },
       { x: 10, y: 14 },
       { x: 10, y: 13 },
       { x: 10, y: 12 },
       { x: 10, y: 11 },
       { x: 10, y: 10 },
-    ],
-    protected _speed: number = 1,
-    protected _direction: KeyboardKey = KeyboardKey.ArrowDown
-  ) {}
+    ];
+  }
 
   getRenderSettings() {
     return {
@@ -217,14 +248,17 @@ export class Snake {
 }
 
 export class FootPoint {
+  getName(): string {
+    return "footPoint";
+  }
   constructor(canvasConfig: DMCanvasConfig) {
     this.newPoint(canvasConfig);
   }
 
   newPoint({ heightGrid, widthGrid }: DMCanvasConfig) {
     this.point = {
-      x: Math.abs(Math.floor(Math.random() * heightGrid)),
-      y: Math.abs(Math.floor(Math.random() * widthGrid)),
+      x: Math.abs(Math.floor(Math.random() * widthGrid)),
+      y: Math.abs(Math.floor(Math.random() * heightGrid)),
     };
     console.log(this.point);
   }

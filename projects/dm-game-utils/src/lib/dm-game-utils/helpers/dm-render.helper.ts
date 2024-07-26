@@ -43,11 +43,13 @@ export function DMRenderHelper(
 
   const { heightCanvas, widthCanvas, pixel, heightGrid, widthGrid } =
     canvasConfig;
-  ctx.clearRect(0, 0, (widthGrid + 1) * pixel, (heightGrid + 1) * pixel);
+  ctx.clearRect(0, 0, widthGrid * pixel, heightGrid * pixel);
 
   const drawPoint = (point: DMPoint, color: string) => {
     ctx.fillStyle = color;
     ctx.fillRect(point.x * pixel, point.y * pixel, pixel, pixel);
+    ctx.strokeStyle = "#AAA";
+    ctx.strokeRect(point.x * pixel, point.y * pixel, pixel, pixel);
   };
 
   gameManage.render().forEach(({ object, configRender }) => {

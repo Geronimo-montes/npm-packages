@@ -1,3 +1,4 @@
+import { keyframes } from "@angular/animations";
 import { DMCanvasConfig } from "../../../dm-game-utils/src/lib/dm-game-utils/models/dm-canvas-grid.interface";
 import { KeyboardKey } from "../../../dm-game-utils/src/lib/dm-game-utils/models/dm-key.interface";
 import {
@@ -18,71 +19,130 @@ export const factoryGame = (canvasConfig: DMCanvasConfig): DMGameManageAPI => {
 };
 
 export class Game implements DMGameManageAPI {
+  getName(): string {
+    return "Game";
+  }
   canvasConfig: DMCanvasConfig;
   barra: Barra;
-  wall: Wall;
+  wall: WallGame;
+  blocks: Block[] = [];
+  pelota: Pelota;
 
   constructor(canvasConfig: DMCanvasConfig) {
     this.canvasConfig = canvasConfig;
-    this.barra = new Barra(canvasConfig);
-    this.wall = new Wall(canvasConfig);
+    const pointsBarra = fatoryPointsBarra(canvasConfig);
+    const { x, y } = pointsBarra[1];
+    this.barra = new Barra(canvasConfig, pointsBarra);
+    this.wall = new WallGame(canvasConfig);
+    this.blocks = calcInitStateBloques(canvasConfig);
+    // this.blocks = [new Block(canvasConfig, { x: 18, y: 20 })];
+    this.pelota = new Pelota(canvasConfig, { x, y: y - 1 });
+  }
+
+  getMarcador(): number {
+    return 0;
   }
 
   inputHandler(key: string): void {
     throw new Error("Method not implemented.");
   }
+
   setKey(key: string): void {
-    if (key === KeyboardKey.ArrowLeft || key === KeyboardKey.ArrowRight) {
-      this.barra.setDirection(key);
+    switch (key) {
+      case KeyboardKey.ArrowLeft:
+      case KeyboardKey.ArrowRight:
+        this.barra.setDirection(key);
+        if (this.barra.hasPelota) {
+          this.pelota.setDirection(key);
+        }
+        break;
+      case KeyboardKey.Space:
+        // soltar pelota
+        if (this.pelota.isRuning) break;
+
+        this.barra.hasPelota = false;
+        this.pelota.isRuning = true;
+        this.pelota.avanzar();
+        break;
+      default:
+        break;
     }
   }
+
   loop(): void {
-    this.barra.move();
+    this.pelota.avanzar();
   }
+
   render(): DMObjRenderList {
     return <DMObjRenderList>[
+      { object: this.pelota, configRender: this.pelota.getRenderSettings() },
       { object: this.barra, configRender: this.barra.getRenderSettings() },
+      ...this.blocks.map((object) => ({
+        object,
+        configRender: object.getRenderSettings(),
+      })),
     ];
   }
 
   detectCollisions(): DMListObjects {
     return <DMListObjects>[
+      { object: this.pelota, points: this.pelota.points },
       { object: this.barra, points: this.barra.points },
       { object: this.wall, points: this.wall.points },
     ];
   }
+
   getConfigCollision(): DMConfigCollision {
     throw new Error("Method not implemented.");
   }
+
   validateCollisions(collisions: DMCollisionResult[]): boolean {
-    for (let index = 0; index < collisions.length; index++) {}
+    // console.log({ collisions });
+    collisions.forEach(({ objectA, objectB }: DMCollisionResult) => {
+      if (
+        (objectA.object instanceof Pelota &&
+          objectB.object instanceof WallGame) ||
+        (objectB.object instanceof Pelota && objectA.object instanceof WallGame)
+      ) {
+        console.log({ c: "collisions" });
+        this.pelota.rebotarEnPared();
+      }
+    });
     return true;
   }
 }
 
-const size =
-  Math.floor((Math.min(window.innerHeight, window.innerWidth) * 0.8) / 100) *
-  100;
-const pixel = 10;
+const pixel = 20;
+const percent95Height = Math.floor(window.innerHeight * 0.8);
+const percent95Width = Math.floor(window.innerWidth * 0.9);
+const heightGrid = Math.floor(percent95Height / pixel);
+const widthGrid = Math.floor(percent95Width / pixel);
+const heightCanvas = heightGrid * pixel;
+const widthCanvas = widthGrid * pixel;
 
 export const gameConfig: DMConfigGameManagerService = {
   rendererHelper: DMRenderHelper,
   colliderHelper: DmColaiderHelper,
   canvasConfig: {
     pixel,
-    heightGrid: Math.floor(window.innerHeight * 0.95) / pixel,
-    widthGrid: Math.floor(window.innerWidth * 0.95) / pixel,
-    heightCanvas: Math.floor(window.innerHeight * 0.95),
-    widthCanvas: Math.floor(window.innerWidth * 0.95),
+    heightGrid,
+    widthGrid,
+    heightCanvas,
+    widthCanvas,
   },
   mainClassGame: factoryGame,
 };
 
-export class Wall {
-  constructor(canvasConfig: DMCanvasConfig) {
-    this.points = [
+export class WallGame {
+  getName(): string {
+    return "WallGame";
+  }
+  private _points: DMPoint[] = [];
+
+  public constructor(canvasConfig: DMCanvasConfig) {
+    this._points = [
       ...Array.from({ length: canvasConfig.widthGrid }, (_, i) => [
-        <DMPoint>{ x: i, y: 0 },
+        <DMPoint>{ x: (i = 1), y: 0 },
         <DMPoint>{ x: i, y: canvasConfig.heightGrid },
       ]).flat(1),
       ...Array.from({ length: canvasConfig.heightGrid }, (_, i) => [
@@ -92,67 +152,189 @@ export class Wall {
     ];
   }
 
-  public points: DMPoint[] = [];
+  get points(): DMPoint[] {
+    return this._points;
+  }
+
+  public getRenderSettings() {
+    return {
+      color: "grown",
+      points: this._points,
+    };
+  }
 }
 
-export class Barra {
-  points: DMPoint[];
-  direction: KeyboardKey.ArrowLeft | KeyboardKey.ArrowRight =
-    KeyboardKey.ArrowLeft;
+const fatoryPointsBarra = (canvasConfig: DMCanvasConfig) => {
+  const medio = Math.floor(canvasConfig.widthGrid / 2);
+  return [
+    { x: medio - 2, y: canvasConfig.heightGrid - 2 },
+    { x: medio - 1, y: canvasConfig.heightGrid - 2 },
+    { x: medio, y: canvasConfig.heightGrid - 2 },
+    { x: medio + 1, y: canvasConfig.heightGrid - 2 },
+    { x: medio + 2, y: canvasConfig.heightGrid - 2 },
+  ];
+};
 
-  canvasConfig: DMCanvasConfig;
-  constructor({
-    heightCanvas,
-    heightGrid,
-    pixel,
-    widthCanvas,
-    widthGrid,
-  }: DMCanvasConfig) {
-    this.canvasConfig = {
-      heightCanvas,
-      heightGrid,
-      pixel,
-      widthCanvas,
-      widthGrid,
-    };
-    const medio = Math.floor(widthGrid / 2);
-    this.points = [
-      { x: medio - 2, y: heightGrid - 2 },
-      { x: medio - 1, y: heightGrid - 2 },
-      { x: medio, y: heightGrid - 2 },
-      { x: medio + 1, y: heightGrid - 2 },
-      { x: medio + 2, y: heightGrid - 2 },
-    ];
+export class Barra {
+  getName(): string {
+    return "Barra";
+  }
+  private canvasConfig: DMCanvasConfig;
+  private _points: DMPoint[];
+  public hasPelota: boolean = true;
+
+  public constructor(canvasConfig: DMCanvasConfig, pointsBarra: DMPoint[]) {
+    this.canvasConfig = canvasConfig;
+    this._points = pointsBarra;
   }
 
-  getRenderSettings() {
+  public get points(): DMPoint[] {
+    return this._points;
+  }
+
+  public getRenderSettings() {
     return {
       color: "Gray",
-      points: this.points,
+      points: this._points,
     };
   }
-
-  move() {}
 
   public setDirection(
     direction: KeyboardKey.ArrowLeft | KeyboardKey.ArrowRight
   ) {
-    this.direction = direction;
     if (KeyboardKey.ArrowLeft === direction) {
-      if (this.points.every((p) => p.x > 0))
-        this.points = this.points.map((v) => ({ x: v.x - 1, y: v.y }));
+      if (this._points.every((p) => p.x > 0))
+        this._points = this._points.map((v) => ({ x: v.x - 1, y: v.y }));
     } else {
-      if (this.points.every((p) => p.x < this.canvasConfig.widthGrid - 1))
-        this.points = this.points.map((v) => ({ x: v.x + 1, y: v.y }));
+      if (this._points.every((p) => p.x < this.canvasConfig.widthGrid - 1))
+        this._points = this._points.map((v) => ({ x: v.x + 1, y: v.y }));
     }
   }
 }
 
-// TODO: Generate class of blocks point and add methods y properties.
-// export class Bloques {
-//   canvasConfig: DMCanvasConfig;
+export interface BlokSize {
+  height: number;
+  width: number;
+}
 
-//   constructor(canvasConfig: DMCanvasConfig) {
-//     this.canvasConfig = canvasConfig;
-//   }
-// }
+const calcInitStateBloques = (canvasConfig: DMCanvasConfig) => {
+  const restWidth = canvasConfig.widthGrid * 0.9;
+  const countBlockWidth = Math.floor(restWidth / 4);
+
+  const restHeight = canvasConfig.heightGrid * 0.6;
+  const countBlockHeight = Math.floor(restHeight / 3);
+
+  const points: Block[] = [];
+  for (let iWidth = 1; iWidth <= countBlockWidth; iWidth++) {
+    for (let iHeight = 1; iHeight < countBlockHeight; iHeight++) {
+      points.push(
+        new Block(canvasConfig, { x: iWidth * 4 - 1, y: iHeight * 3 })
+      );
+
+    }
+  }
+
+  return points;
+};
+
+// TODO: Generate class of blocks point and add methods y properties.
+export class Block {
+  getName(): string {
+    return "Block";
+  }
+  private canvasConfig: DMCanvasConfig;
+  private _points: DMPoint[] = [];
+  private size: BlokSize = { height: 2, width: 3 };
+
+  constructor(canvasConfig: DMCanvasConfig, { x, y }: DMPoint) {
+    this.canvasConfig = canvasConfig;
+    for (let wx = 0; wx < this.size.width; wx++) {
+      for (let hy = 0; hy < this.size.height; hy++) {
+        this.points.push({ x: x + wx, y: y + hy });
+      }
+    }
+  }
+
+  public getRenderSettings() {
+    return {
+      color: "yellow",
+      points: this.points,
+    };
+  }
+
+  public get points(): DMPoint[] {
+    return this._points;
+  }
+}
+
+export class Pelota {
+  getName(): string {
+    return "Pelota";
+  }
+  private canvasConfig: DMCanvasConfig;
+  private _point!: DMPoint;
+  public isRuning: boolean = false;
+  public deltas = { dx: -1, dy: 1 };
+
+  constructor(canvasConfig: DMCanvasConfig, { x, y }: DMPoint) {
+    this.canvasConfig = canvasConfig;
+    this._point = { x, y };
+  }
+
+  public getRenderSettings() {
+    return {
+      color: "red",
+      points: this.points,
+    };
+  }
+
+  public get points(): DMPoint[] {
+    return [this._point];
+  }
+
+  avanzar() {
+    if (!this.isRuning) return;
+
+    this._point = {
+      x: this._point.x + this.deltas.dx,
+      y: this._point.y + this.deltas.dy,
+    };
+
+    console.log({ point: this._point });
+  }
+
+  rebotarEnPared() {
+    const { x, y } = this.points[0];
+    const { dx, dy } = this.deltas;
+
+    console.log(`Position before: (${x}, ${y}), Deltas: (${dx}, ${dy})`);
+
+    // Verificar colisión con las paredes laterales (izquierda y derecha)
+    if (x + dx >= this.canvasConfig.widthGrid || x + dx <= 0) {
+      this.deltas.dx = -dx;
+      console.log(`Rebotó en la pared lateral. Nuevo dx: ${this.deltas.dx}`);
+    }
+
+    // Verificar colisión con las paredes superior e inferior
+    if (y + dy >= this.canvasConfig.heightGrid || y + dy <= 0) {
+      this.deltas.dy = -dy;
+      console.log(
+        `Rebotó en la pared superior/inferior. Nuevo dy: ${this.deltas.dy}`
+      );
+    }
+
+    console.log(
+      `Position after: (${x + this.deltas.dx}, ${y + this.deltas.dy})`
+    );
+  }
+
+  public setDirection(
+    direction: KeyboardKey.ArrowLeft | KeyboardKey.ArrowRight
+  ) {
+    if (KeyboardKey.ArrowLeft === direction) {
+      this._point = { x: this._point.x - 1, y: this._point.y };
+    } else {
+      this._point = { x: this._point.x + 1, y: this._point.y };
+    }
+  }
+}

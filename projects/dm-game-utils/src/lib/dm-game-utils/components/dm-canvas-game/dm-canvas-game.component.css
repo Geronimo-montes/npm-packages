@@ -1,4 +1,20 @@
-canvas{
-    background-color: black;
-    border: 1px solid blue;
+* {
+  display: flex;
+  flex-direction: column;
+  place-items: center center;
+  justify-self: center;
+  border-spacing: 10px;
+  margin: 0;
+  padding: 0;
+  margin-top: calc(100vh * 0.01 * 2);
+}
+
+canvas {
+  outline: calc(100vh * 0.01) ridge rgba(170, 50, 220, 0.6);
+}
+
+.marcador {
+  height: 10%;
+  width: calc(94% - (100vh * 0.01));
+  outline: calc(100vh * 0.01) ridge green;
 }

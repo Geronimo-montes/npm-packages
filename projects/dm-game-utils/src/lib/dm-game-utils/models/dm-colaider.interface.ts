@@ -24,5 +24,5 @@ export interface DMCollisionResult {
 }
 export type DMListColliderPoints = Array<DMCollisionResult>;
 
-export type DMObjPoints = { object: any; points: DMPoint[] };
+export type DMObjPoints = { name?: string; object: any; points: DMPoint[] };
 export type DMListObjects = Array<DMObjPoints>;

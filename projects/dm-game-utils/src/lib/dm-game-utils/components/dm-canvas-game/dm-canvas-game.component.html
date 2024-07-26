@@ -1,7 +1,13 @@
-<canvas
-  #canvas
-  (dmKeyArrowDown)="heandle($event)"
-  (dmKeyArrowUp)="heandle($event)"
-  (dmKeyArrowRight)="heandle($event)"
-  (dmKeyArrowLeft)="heandle($event)"
-></canvas>
+<div class="container">
+  <div class="marcador">
+    <h1>Score: {{ getScore() }}</h1>
+  </div>
+  <canvas
+    #canvas
+    (dmKeyArrowDown)="heandle($event)"
+    (dmKeyArrowUp)="heandle($event)"
+    (dmKeyArrowLeft)="heandle($event)"
+    (dmKeyArrowRight)="heandle($event)"
+    (dmKeySpace)="heandle($event)"
+  ></canvas>
+</div>

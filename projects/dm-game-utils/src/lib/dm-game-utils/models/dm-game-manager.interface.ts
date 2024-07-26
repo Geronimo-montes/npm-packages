@@ -16,6 +16,7 @@ import { DMObjRenderList, DMRenderFunc } from "./dm-render.interface";
  * renderizar objetos y detectar colisiones.
  */
 export interface DMGameManageAPI {
+  getMarcador(): number;
   /**
    * Maneja la entrada del usuario.
    *

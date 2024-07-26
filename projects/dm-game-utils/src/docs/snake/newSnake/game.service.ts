@@ -38,10 +38,10 @@ export class GameSnakeService
   start(canvas: any) {
     this.loop
       .pipe(
+        tap(() => this.game.snake.avanzar()),
         map(() => ctrlColisiones(this.game)),
         tap(() => render(canvas, this.game)),
-        takeWhile((colisiones) => this.validarColisiones(colisiones)),
-        tap(() => this.game.snake.avanzar())
+        takeWhile((colisiones) => this.validarColisiones(colisiones))
       )
       .subscribe(() => {});
   }
