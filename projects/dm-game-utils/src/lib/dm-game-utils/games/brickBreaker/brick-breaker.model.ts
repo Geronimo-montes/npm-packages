@@ -1,6 +1,5 @@
-import { keyframes } from "@angular/animations";
-import { DMCanvasConfig } from "../../../dm-game-utils/src/lib/dm-game-utils/models/dm-canvas-grid.interface";
-import { KeyboardKey } from "../../../dm-game-utils/src/lib/dm-game-utils/models/dm-key.interface";
+import { DMCanvasConfig } from "../../models/dm-canvas-grid.interface";
+import { KeyboardKey } from "../../models/dm-key.interface";
 import {
   DMCollisionResult,
   DMConfigCollision,
@@ -11,17 +10,14 @@ import {
   DMPoint,
   DMRenderHelper,
   DmColaiderHelper,
-} from "../../../dm-game-utils/src/public-api";
+} from "../../../../public-api";
+import { BlokSize } from "./brick-breaker.interface";
+import { calcInitStateBloques } from "./blocks.helper";
 
-export const factoryGame = (canvasConfig: DMCanvasConfig): DMGameManageAPI => {
-  // ... more code
-  return new Game(canvasConfig);
-};
-
+/**
+ *
+ */
 export class Game implements DMGameManageAPI {
-  getName(): string {
-    return "Game";
-  }
   canvasConfig: DMCanvasConfig;
   barra: Barra;
   wall: WallGame;
@@ -30,24 +26,22 @@ export class Game implements DMGameManageAPI {
 
   constructor(canvasConfig: DMCanvasConfig) {
     this.canvasConfig = canvasConfig;
-    const pointsBarra = fatoryPointsBarra(canvasConfig);
-    const { x, y } = pointsBarra[1];
-    this.barra = new Barra(canvasConfig, pointsBarra);
+    this.barra = new Barra(canvasConfig);
+    const { x, y } = this.barra.points[1];
+    this.pelota = new Pelota(canvasConfig, { x, y: y - 1 });
     this.wall = new WallGame(canvasConfig);
     this.blocks = calcInitStateBloques(canvasConfig);
-    // this.blocks = [new Block(canvasConfig, { x: 18, y: 20 })];
-    this.pelota = new Pelota(canvasConfig, { x, y: y - 1 });
   }
 
-  getMarcador(): number {
+  public getMarcador(): number {
     return 0;
   }
 
-  inputHandler(key: string): void {
+  public inputHandler(key: string): void {
     throw new Error("Method not implemented.");
   }
 
-  setKey(key: string): void {
+  public setKey(key: string): void {
     switch (key) {
       case KeyboardKey.ArrowLeft:
       case KeyboardKey.ArrowRight:
@@ -69,11 +63,11 @@ export class Game implements DMGameManageAPI {
     }
   }
 
-  loop(): void {
+  public loop(): void {
     this.pelota.avanzar();
   }
 
-  render(): DMObjRenderList {
+  public render(): DMObjRenderList {
     return <DMObjRenderList>[
       { object: this.pelota, configRender: this.pelota.getRenderSettings() },
       { object: this.barra, configRender: this.barra.getRenderSettings() },
@@ -84,65 +78,71 @@ export class Game implements DMGameManageAPI {
     ];
   }
 
-  detectCollisions(): DMListObjects {
+  public detectCollisions(): DMListObjects {
     return <DMListObjects>[
       { object: this.pelota, points: this.pelota.points },
       { object: this.barra, points: this.barra.points },
       { object: this.wall, points: this.wall.points },
+      ...this.blocks.map((v) => ({ object: v, points: v.points })),
     ];
   }
 
-  getConfigCollision(): DMConfigCollision {
+  public getConfigCollision(): DMConfigCollision {
     throw new Error("Method not implemented.");
   }
 
-  validateCollisions(collisions: DMCollisionResult[]): boolean {
+  public validateCollisions(collisions: DMCollisionResult[]): boolean {
     // console.log({ collisions });
-    collisions.forEach(({ objectA, objectB }: DMCollisionResult) => {
-      if (
-        (objectA.object instanceof Pelota &&
-          objectB.object instanceof WallGame) ||
-        (objectB.object instanceof Pelota && objectA.object instanceof WallGame)
-      ) {
-        console.log({ c: "collisions" });
-        this.pelota.rebotarEnPared();
+    collisions.forEach(
+      ({ objectA, objectB, impactPoint }: DMCollisionResult) => {
+        if (
+          (objectA.object instanceof Pelota &&
+            objectB.object instanceof WallGame) ||
+          (objectB.object instanceof Pelota &&
+            objectA.object instanceof WallGame)
+        ) {
+          if (impactPoint.y === this.canvasConfig.heightGrid) {
+            alert("Game over");
+          }
+          this.pelota.rebotarEnPared();
+        }
+
+        if (
+          (objectA.object instanceof Pelota &&
+            objectB.object instanceof Barra) ||
+          (objectB.object instanceof Pelota && objectA.object instanceof Barra)
+        ) {
+          // this.pelota.rebotarEnPared();
+          this.pelota.deltas.dy = -this.pelota.deltas.dy;
+        }
+
+        if (
+          (objectA.object instanceof Pelota &&
+            objectB.object instanceof Block) ||
+          (objectB.object instanceof Pelota && objectA.object instanceof Block)
+        ) {
+          // this.pelota.rebotarEnPared();
+          this.pelota.deltas.dy = -this.pelota.deltas.dy;
+          const blok =
+            objectA.object instanceof Block ? objectA.object : objectB.object;
+          this.blocks = this.blocks.filter((v) => v !== blok);
+        }
       }
-    });
+    );
     return true;
   }
 }
 
-const pixel = 20;
-const percent95Height = Math.floor(window.innerHeight * 0.8);
-const percent95Width = Math.floor(window.innerWidth * 0.9);
-const heightGrid = Math.floor(percent95Height / pixel);
-const widthGrid = Math.floor(percent95Width / pixel);
-const heightCanvas = heightGrid * pixel;
-const widthCanvas = widthGrid * pixel;
-
-export const gameConfig: DMConfigGameManagerService = {
-  rendererHelper: DMRenderHelper,
-  colliderHelper: DmColaiderHelper,
-  canvasConfig: {
-    pixel,
-    heightGrid,
-    widthGrid,
-    heightCanvas,
-    widthCanvas,
-  },
-  mainClassGame: factoryGame,
-};
-
+/**
+ *
+ */
 export class WallGame {
-  getName(): string {
-    return "WallGame";
-  }
   private _points: DMPoint[] = [];
 
   public constructor(canvasConfig: DMCanvasConfig) {
     this._points = [
       ...Array.from({ length: canvasConfig.widthGrid }, (_, i) => [
-        <DMPoint>{ x: (i = 1), y: 0 },
+        <DMPoint>{ x: i, y: 0 },
         <DMPoint>{ x: i, y: canvasConfig.heightGrid },
       ]).flat(1),
       ...Array.from({ length: canvasConfig.heightGrid }, (_, i) => [
@@ -164,28 +164,26 @@ export class WallGame {
   }
 }
 
-const fatoryPointsBarra = (canvasConfig: DMCanvasConfig) => {
-  const medio = Math.floor(canvasConfig.widthGrid / 2);
-  return [
-    { x: medio - 2, y: canvasConfig.heightGrid - 2 },
-    { x: medio - 1, y: canvasConfig.heightGrid - 2 },
-    { x: medio, y: canvasConfig.heightGrid - 2 },
-    { x: medio + 1, y: canvasConfig.heightGrid - 2 },
-    { x: medio + 2, y: canvasConfig.heightGrid - 2 },
-  ];
-};
-
+/**
+ *
+ */
 export class Barra {
-  getName(): string {
-    return "Barra";
-  }
   private canvasConfig: DMCanvasConfig;
   private _points: DMPoint[];
+  private _speed: number = 2;
   public hasPelota: boolean = true;
 
-  public constructor(canvasConfig: DMCanvasConfig, pointsBarra: DMPoint[]) {
+  public constructor(canvasConfig: DMCanvasConfig) {
     this.canvasConfig = canvasConfig;
-    this._points = pointsBarra;
+
+    const medio = Math.floor(canvasConfig.widthGrid / 2);
+    this._points = [
+      { x: medio - 2, y: canvasConfig.heightGrid - 2 },
+      { x: medio - 1, y: canvasConfig.heightGrid - 2 },
+      { x: medio, y: canvasConfig.heightGrid - 2 },
+      { x: medio + 1, y: canvasConfig.heightGrid - 2 },
+      { x: medio + 2, y: canvasConfig.heightGrid - 2 },
+    ];
   }
 
   public get points(): DMPoint[] {
@@ -204,47 +202,27 @@ export class Barra {
   ) {
     if (KeyboardKey.ArrowLeft === direction) {
       if (this._points.every((p) => p.x > 0))
-        this._points = this._points.map((v) => ({ x: v.x - 1, y: v.y }));
+        this._points = this._points.map((v) => ({
+          x: v.x - this._speed,
+          y: v.y,
+        }));
     } else {
       if (this._points.every((p) => p.x < this.canvasConfig.widthGrid - 1))
-        this._points = this._points.map((v) => ({ x: v.x + 1, y: v.y }));
+        this._points = this._points.map((v) => ({
+          x: v.x + this._speed,
+          y: v.y,
+        }));
     }
   }
 }
 
-export interface BlokSize {
-  height: number;
-  width: number;
-}
-
-const calcInitStateBloques = (canvasConfig: DMCanvasConfig) => {
-  const restWidth = canvasConfig.widthGrid * 0.9;
-  const countBlockWidth = Math.floor(restWidth / 4);
-
-  const restHeight = canvasConfig.heightGrid * 0.6;
-  const countBlockHeight = Math.floor(restHeight / 3);
-
-  const points: Block[] = [];
-  for (let iWidth = 1; iWidth <= countBlockWidth; iWidth++) {
-    for (let iHeight = 1; iHeight < countBlockHeight; iHeight++) {
-      points.push(
-        new Block(canvasConfig, { x: iWidth * 4 - 1, y: iHeight * 3 })
-      );
-
-    }
-  }
-
-  return points;
-};
-
-// TODO: Generate class of blocks point and add methods y properties.
+/**
+ *
+ */
 export class Block {
-  getName(): string {
-    return "Block";
-  }
   private canvasConfig: DMCanvasConfig;
   private _points: DMPoint[] = [];
-  private size: BlokSize = { height: 2, width: 3 };
+  private size: BlokSize = { height: 1, width: 1 };
 
   constructor(canvasConfig: DMCanvasConfig, { x, y }: DMPoint) {
     this.canvasConfig = canvasConfig;
@@ -267,14 +245,14 @@ export class Block {
   }
 }
 
+/**
+ *
+ */
 export class Pelota {
-  getName(): string {
-    return "Pelota";
-  }
   private canvasConfig: DMCanvasConfig;
   private _point!: DMPoint;
   public isRuning: boolean = false;
-  public deltas = { dx: -1, dy: 1 };
+  public deltas = { dx: 1, dy: -1 };
 
   constructor(canvasConfig: DMCanvasConfig, { x, y }: DMPoint) {
     this.canvasConfig = canvasConfig;
@@ -292,7 +270,7 @@ export class Pelota {
     return [this._point];
   }
 
-  avanzar() {
+  public avanzar() {
     if (!this.isRuning) return;
 
     this._point = {
@@ -300,10 +278,10 @@ export class Pelota {
       y: this._point.y + this.deltas.dy,
     };
 
-    console.log({ point: this._point });
+    console.log({ ...this._point });
   }
 
-  rebotarEnPared() {
+  public rebotarEnPared() {
     const { x, y } = this.points[0];
     const { dx, dy } = this.deltas;
 
