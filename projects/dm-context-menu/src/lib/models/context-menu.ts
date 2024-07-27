@@ -18,10 +18,10 @@ export const defaultActionDMContextMenu = ($event: MouseEvent) =>
 export type DMDefaultAction = typeof defaultActionDMContextMenu;
 
 export interface ActionDMContextMenu {
-  onClick?: (event: MouseEvent) => void;
-  onHover?: (event: MouseEvent) => void;
-  onDblClick?: (event: MouseEvent) => void;
-  onRgtClick?: (event: MouseEvent) => void;
+  onClick?: (args: any) => void;
+  onHover?: (args: any) => void;
+  onDblClick?: (args: any) => void;
+  onRgtClick?: (args: any) => void;
 }
 
 export type StringActionDMContextMenu =

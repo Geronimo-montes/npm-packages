@@ -11,21 +11,24 @@ import {
   HoverDirective,
 } from "./directives";
 
-const DIRECTIVES: any[] = [
-  ClickDirective,
-  HoverDirective,
-  ContextMenuContentDirective,
-  ContextMenuDirective,
-];
-
-const SERVICES: any[] = [DMContextMenuService];
-
-const COMPONENTS: any[] = [DMContextMenuComponent, DMItemContextMenuComponent];
-
 @NgModule({
   imports: [CommonModule, BrowserModule],
-  declarations: [...COMPONENTS, ...DIRECTIVES],
-  exports: [...COMPONENTS, ...DIRECTIVES],
-  providers: [...SERVICES],
+  declarations: [
+    DMContextMenuComponent,
+    DMItemContextMenuComponent,
+    ClickDirective,
+    HoverDirective,
+    ContextMenuContentDirective,
+    ContextMenuDirective,
+  ],
+  exports: [
+    DMContextMenuComponent,
+    DMItemContextMenuComponent,
+    ClickDirective,
+    HoverDirective,
+    ContextMenuContentDirective,
+    ContextMenuDirective,
+  ],
+  providers: [DMContextMenuService],
 })
 export class DMContextMenuModule {}

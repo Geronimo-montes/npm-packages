@@ -96,6 +96,7 @@ export class DMContextMenuService implements OnDestroy {
 
   public closeMenu() {
     this._contextMenu.items.forEach((item) => this.subMenuUpdates.next(item));
+    this.subShowMenu.next(false);
   }
 
   public selectItem(item: DMContextMenuItem) {

@@ -31,13 +31,13 @@ export class DMContextMenuComponent implements OnInit, OnDestroy {
 			.pipe(takeUntil(this.destroy$))
 			.subscribe((p) => {
 				this.position = p;
-				console.log(this.position);
+				// console.log(this.position);
 			});
 		this.contextmenuService.showMenu$
 			.pipe(takeUntil(this.destroy$))
 			.subscribe((s) => {
 				this.showMenu = s;
-				console.log(this.showMenu);
+				// console.log(this.showMenu);
 			});
 		this.contextmenuService.selectedItem$
 			.pipe(takeUntil(this.destroy$))

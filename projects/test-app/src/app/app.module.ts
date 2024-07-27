@@ -1,28 +1,13 @@
-import { NgModule } from "@angular/core";
-import {
-  CONFIG_TOKEN,
-  DMGameManagerHelper,
-  DMGameManagerService,
-  DmGameUtilsModule,
-  gameConfig,
-  provideConfig,
-} from "../../../dm-game-utils/src/public-api";
-import { BrowserModule } from "@angular/platform-browser";
 import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
 import { AppComponent } from "./app.component";
+import { DemoDMContextMenuModule } from "./demo-dm-context-menu/demo-dm-context-menu.module";
 
 @NgModule({
-  imports: [BrowserModule, CommonModule, DmGameUtilsModule],
+  imports: [BrowserModule, CommonModule, DemoDMContextMenuModule],
   bootstrap: [AppComponent],
   declarations: [AppComponent],
-  providers: [
-    DMGameManagerService,
-    provideConfig(gameConfig),
-    {
-      provide: DMGameManagerService,
-      useFactory: DMGameManagerHelper,
-      deps: [CONFIG_TOKEN],
-    },
-  ],
+  //
 })
 export class AppModule {}
