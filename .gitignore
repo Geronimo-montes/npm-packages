@@ -176,12 +176,3 @@ dist
 # End of https://www.toptal.com/developers/gitignore/api/angular,node
 
 # Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
-dm-contextmenu/
-context-menu/
-.vscode/
-
-/projects/dm-faker-pro
-/projects/dm-custom-notifier
-/projects/dm-context-menu
-# /projects/test-app
-# projects/dm-game-utils/src/docs/
