@@ -63,7 +63,7 @@ export interface DMConfigGameManagerService {
   rendererHelper: DMRenderFunc;
   colliderHelper: DMColliderFunc;
   canvasConfig: DMCanvasConfig;
-  mainClassGame: (canvasConfig: DMCanvasConfig) => DMGameManageAPI;
+  mainClassGame: (canvasConfig: DMCanvasConfig) => DMGameManageAPI ;
 }
 
 export const CONFIG_TOKEN: InjectionToken<DMConfigGameManagerService> =

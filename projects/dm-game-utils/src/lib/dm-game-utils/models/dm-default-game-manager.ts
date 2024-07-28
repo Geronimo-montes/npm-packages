@@ -1,3 +1,4 @@
+import { factoryGame } from "../games/brickBreaker";
 import { SnakeMainGameHelper } from "../games/snake/snake.model";
 import { DmColaiderHelper } from "../helpers/dm-colaider.helper";
 import { DMRenderHelper } from "../helpers/dm-render.helper";
@@ -11,12 +12,6 @@ const widthGrid = Math.floor(percent95Width / pixel);
 const heightCanvas = heightGrid * pixel;
 const widthCanvas = widthGrid * pixel;
 
-// const heightCanvas = 600;
-// const widthCanvas = 800;
-// const pixel = 20;
-// const heightGrid = heightCanvas / pixel;
-// const widthGrid = widthCanvas / pixel;
-
 export const DEFAULT_CONFIG: DMConfigGameManagerService = {
   rendererHelper: DMRenderHelper,
   colliderHelper: DmColaiderHelper,
@@ -27,5 +22,5 @@ export const DEFAULT_CONFIG: DMConfigGameManagerService = {
     heightCanvas,
     widthCanvas,
   },
-  mainClassGame: SnakeMainGameHelper,
+  mainClassGame: (a: any): any => {},
 };
