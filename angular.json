@@ -71,7 +71,6 @@
           "builder": "@angular-devkit/build-angular:extract-i18n"
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "polyfills": [
               "zone.js",
@@ -114,7 +113,6 @@
           "defaultConfiguration": "production"
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "tsConfig": "projects/dm-context-menu/tsconfig.spec.json",
             "polyfills": [
@@ -129,7 +127,7 @@
       "projectType": "library",
       "root": "projects/dm-faker-pro",
       "sourceRoot": "projects/dm-faker-pro/src",
-      "prefix": "lib",
+      "prefix": "dm",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
@@ -147,7 +145,6 @@
           "defaultConfiguration": "production"
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "tsConfig": "projects/dm-faker-pro/tsconfig.spec.json",
             "polyfills": [
@@ -162,7 +159,7 @@
       "projectType": "library",
       "root": "projects/dm-custom-notifier",
       "sourceRoot": "projects/dm-custom-notifier/src",
-      "prefix": "lib",
+      "prefix": "dm",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
@@ -180,7 +177,6 @@
           "defaultConfiguration": "production"
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "tsConfig": "projects/dm-custom-notifier/tsconfig.spec.json",
             "polyfills": [
@@ -213,7 +209,6 @@
           "defaultConfiguration": "production"
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "tsConfig": "projects/dm-game-utils/tsconfig.spec.json",
             "polyfills": [

@@ -4,12 +4,10 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
-      "context-menu": ["./dist/context-menu"],
       "dm-context-menu": ["./dist/dm-context-menu"],
-      "dm-contextmenu": ["./dist/dm-contextmenu"],
       "dm-custom-notifier": ["./dist/dm-custom-notifier"],
-      "dm-faker-pro": ["./dist/dm-faker-pro"],
-      "dm-game-utils": ["./dist/dm-game-utils"]
+      "dm-game-utils": ["./dist/dm-game-utils"],
+      "dm-faker-pro": ["./dist/dm-faker-pro"]
     },
     "outDir": "./dist/out-tsc",
     "strict": true,
