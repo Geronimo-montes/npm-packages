@@ -1,0 +1,25 @@
+<dm-notifier-container></dm-notifier-container>
+
+<div class="btn-container">
+  <button
+    [dmOnCreateNotifier]="showNotificartion('warning')"
+    class="btn btn-warning"
+  >
+    Show Notification: warningf
+  </button>
+  <button
+    [dmOnCreateNotifier]="showNotificartion('error')"
+    class="btn btn-error"
+  >
+    Show Notification: error
+  </button>
+  <button [dmOnCreateNotifier]="showNotificartion('info')" class="btn btn-info">
+    Show Notification: info
+  </button>
+  <button
+    [dmOnCreateNotifier]="showNotificartion('success')"
+    class="btn btn-success"
+  >
+    Show Notification: succes
+  </button>
+</div>
