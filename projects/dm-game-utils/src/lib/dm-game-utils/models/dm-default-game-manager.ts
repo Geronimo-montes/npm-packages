@@ -1,5 +1,5 @@
-import { factoryGame } from "../games/brickBreaker";
-import { SnakeMainGameHelper } from "../games/snake/snake.model";
+import { BrickGameHelper } from "../games/brickBreaker/brick-breaker.helper";
+import { SnakeGameHelper } from "../games/snake/snake.model";
 import { DmColaiderHelper } from "../helpers/dm-colaider.helper";
 import { DMRenderHelper } from "../helpers/dm-render.helper";
 import { DMConfigGameManagerService } from "./dm-game-manager.interface";
@@ -22,5 +22,9 @@ export const DEFAULT_CONFIG: DMConfigGameManagerService = {
     heightCanvas,
     widthCanvas,
   },
-  mainClassGame: (a: any): any => {},
+  mainClassGame: SnakeGameHelper,
+  gameHemperList: [
+    { name: "SnakeGameHelper", value: SnakeGameHelper },
+    { name: "BrickGameHelper", value: BrickGameHelper },
+  ],
 };

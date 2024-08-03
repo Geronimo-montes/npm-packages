@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { interval, map, takeWhile, tap } from "rxjs";
+import { ReplaySubject, interval, map, takeWhile, tap } from "rxjs";
 import { DMCanvasConfig } from "../models/dm-canvas-grid.interface";
 import {
   DMColliderFunc,
@@ -8,6 +8,7 @@ import {
 import {
   DMConfigGameManagerService,
   DMGameManageAPI,
+  GameHelperItem,
 } from "../models/dm-game-manager.interface";
 import { KeyboardKey } from "../models/dm-key.interface";
 import { DMObjRenderList, DMRenderFunc } from "../models/dm-render.interface";
@@ -37,6 +38,8 @@ export class DMGameManagerService {
   private rendererHelper!: DMRenderFunc;
   private colliderHelper!: DMColliderFunc;
   private config!: DMConfigGameManagerService;
+  private gameChanges$ = new ReplaySubject(1);
+
   private loop = interval(100);
   bufferKey: KeyboardKey[] = [];
 
@@ -156,5 +159,13 @@ export class DMGameManagerService {
 
   public getCanvasConfig(): DMCanvasConfig {
     return this.canvasConfig;
+  }
+
+  public ChangeGameHelper(name: string) {
+    const gameHelper = this.config.gameHemperList.find((v) => v.name === name);
+    if (gameHelper) {
+      this.gameChanges$.next(gameHelper);
+      this.config.mainClassGame = gameHelper?.value;
+    }
   }
 }

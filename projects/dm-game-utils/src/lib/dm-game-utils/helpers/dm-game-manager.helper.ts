@@ -23,6 +23,7 @@ export const DMGameManagerHelper = (
     rendererHelper: config.rendererHelper,
     colliderHelper: config.colliderHelper,
     mainClassGame: config.mainClassGame,
+    gameHemperList: config.gameHemperList,
   });
 
   return service;

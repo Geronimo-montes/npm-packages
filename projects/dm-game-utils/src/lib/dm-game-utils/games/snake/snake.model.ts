@@ -8,7 +8,7 @@ import { DMGameManageAPI } from "../../models/dm-game-manager.interface";
 import { KeyboardKey } from "../../models/dm-key.interface";
 import { DMObjRenderList, DMPoint } from "../../models/dm-render.interface";
 
-export const SnakeMainGameHelper = (
+export const SnakeGameHelper = (
   canvasConfig: DMCanvasConfig
 ): DMGameManageAPI => {
   return new SnakeMainGame(canvasConfig);

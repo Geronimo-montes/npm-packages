@@ -1,6 +1,11 @@
 <div class="container">
-  <div class="marcador">
-    <h1>Score: {{ getScore() }}</h1>
+  <div class="games-menu">
+    <select [(ngModel)]="currentGameHelper">
+      <option *ngFor="let game of gamesHelper" [value]="game.value">{{game.name}}</option>
+    </select>
+    
+    
+
   </div>
   <canvas
     #canvas

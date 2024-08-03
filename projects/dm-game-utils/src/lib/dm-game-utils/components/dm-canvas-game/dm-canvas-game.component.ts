@@ -21,11 +21,18 @@ export class DMCanvasGameComponent implements AfterViewInit {
   @HostBinding("style.width.px") set width(value: number) {
     this._elementRef.nativeElement.style.width = value;
   }
+  currentGameHelper: any;
+  gamesHelper: any;
 
   constructor(
     private _elementRef: ElementRef,
     private gameManagerService: DMGameManagerService
-  ) {}
+  ) {
+    this.currentGameHelper =
+      this.gameManagerService.getCurrentConfig().gameHemperList[0];
+    this.gamesHelper =
+      this.gameManagerService.getCurrentConfig().gameHemperList;
+  }
 
   ngOnInit(): void {}
 

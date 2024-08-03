@@ -59,11 +59,19 @@ export interface DMGameManageAPI {
   validateCollisions(collisions: DMCollisionResult[]): boolean;
 }
 
+type factoryGameLogic = (canvasConfig: DMCanvasConfig) => DMGameManageAPI;
+
+export interface GameHelperItem {
+  name: string;
+  value: factoryGameLogic;
+}
+
 export interface DMConfigGameManagerService {
   rendererHelper: DMRenderFunc;
   colliderHelper: DMColliderFunc;
   canvasConfig: DMCanvasConfig;
-  mainClassGame: (canvasConfig: DMCanvasConfig) => DMGameManageAPI ;
+  mainClassGame: factoryGameLogic;
+  gameHemperList: Array<GameHelperItem>;
 }
 
 export const CONFIG_TOKEN: InjectionToken<DMConfigGameManagerService> =

@@ -11,6 +11,9 @@ import { DEFAULT_CONFIG } from "../models/dm-default-game-manager";
 import { CONFIG_TOKEN } from "../models/dm-game-manager.interface";
 import { DmGameUtilsPipe } from "../pipes/dm-game-utils.pipe";
 import { DMGameManagerService } from "../services/dm-game-manager.service";
+import { CommonModule } from "@angular/common";
+import { BrowserModule } from "@angular/platform-browser";
+import { FormsModule } from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -22,7 +25,11 @@ import { DMGameManagerService } from "../services/dm-game-manager.service";
     KeySpaceDirective,
     DmGameUtilsPipe,
   ],
-  imports: [],
+  imports: [
+    CommonModule,
+    BrowserModule,
+    FormsModule
+  ],
   exports: [
     DMCanvasGameComponent,
     KeyArrowLeftDirective,

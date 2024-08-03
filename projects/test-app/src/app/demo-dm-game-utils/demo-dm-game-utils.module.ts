@@ -6,8 +6,6 @@ import {
   DMGameManagerHelper,
   DMGameManagerService,
   DmGameUtilsModule,
-  SnakeMainGameHelper,
-  factoryGame,
   provideConfig,
 } from "../../../../dm-game-utils/src/public-api";
 import { DEFAULT_CONFIG } from "../../../../dm-game-utils/src/lib/dm-game-utils/models/dm-default-game-manager";
@@ -18,7 +16,7 @@ import { DEFAULT_CONFIG } from "../../../../dm-game-utils/src/lib/dm-game-utils/
   declarations: [DemoDMGameUtilsComponent],
   providers: [
     DMGameManagerService,
-    provideConfig({ ...DEFAULT_CONFIG, mainClassGame: SnakeMainGameHelper}),
+    provideConfig(DEFAULT_CONFIG),
     {
       provide: DMGameManagerService,
       useFactory: DMGameManagerHelper,
